@@ -1,0 +1,13 @@
+# Size management for digital-assets repo
+# Cap target: 500MB. Use Google Drive for files >5MB.
+
+# Track large images with LFS if installed
+*.psd filter=lfs diff=lfs merge=lfs -text
+*.ai filter=lfs diff=lfs merge=lfs -text
+*.sketch filter=lfs diff=lfs merge=lfs -text
+*.mp4 filter=lfs diff=lfs merge=lfs -text
+*.mov filter=lfs diff=lfs merge=lfs -text
+*.zip filter=lfs diff=lfs merge=lfs -text
+
+# Standard image formats stay in git (keep under 5MB each)
+# *.png, *.jpg, *.jpeg, *.gif — committed normally
