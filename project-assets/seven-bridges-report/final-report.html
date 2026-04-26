@@ -1,0 +1,3663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven Bridges Sales Report 2020-2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #1e3a8a 0%, #1e40af 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #000000 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f7fafc;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s;
+            border-top: 4px solid #1e3a8a;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #1e3a8a;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #1e3a8a;
+            border-bottom: 3px solid #dc2626;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.9em;
+            color: #4a5568;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #1e3a8a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        th:hover {
+            background: #1e40af;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #059669;
+        }
+
+        .waterfront {
+            background: #1e3a8a;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .pool {
+            background: #dc2626;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .year-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .year-table th {
+            background: #1e3a8a;
+        }
+
+        .positive {
+            color: #059669;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #dc2626;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Seven Bridges</h1>
+            <div class="subtitle">Delray Beach, FL - Sales Report 2020-2025</div>
+            <div class="subtitle">222 Closed Sales Analysis</div>
+        </header>
+
+        <div class="dashboard" id="dashboard">
+            <!-- Stats will be inserted here -->
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Annual Price Per Square Foot Analysis</h2>
+                <table class="year-table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Sales Count</th>
+                            <th>Avg Price/SqFt</th>
+                            <th>YoY Change</th>
+                            <th>Median Price</th>
+                            <th>Avg Price</th>
+                            <th>Avg SqFt</th>
+                            <th>Avg DOM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyStats">
+                        <!-- Yearly stats will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Market Trends</h2>
+                <div class="chart-container">
+                    <canvas id="pricePerSqFtChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="salesVolumeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="avgPriceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Property Analysis</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="chart-container">
+                        <canvas id="bedroomChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="domChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">All Properties</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Year Sold</label>
+                        <select id="yearFilter">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Bedrooms</label>
+                        <select id="bedroomFilter">
+                            <option value="">All</option>
+                            <option value="3">3 BR</option>
+                            <option value="4">4 BR</option>
+                            <option value="5">5 BR</option>
+                            <option value="6">6+ BR</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Waterfront</label>
+                        <select id="waterfrontFilter">
+                            <option value="">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Pool</label>
+                        <select id="poolFilter">
+                            <option value="">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Min Price</label>
+                        <input type="number" id="minPrice" placeholder="$0">
+                    </div>
+                    <div class="filter-group">
+                        <label>Max Price</label>
+                        <input type="number" id="maxPrice" placeholder="Any">
+                    </div>
+                </div>
+
+                <table id="propertyTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">MLS #</th>
+                            <th onclick="sortTable(1)">Address</th>
+                            <th onclick="sortTable(2)">Price</th>
+                            <th onclick="sortTable(3)">SqFt</th>
+                            <th onclick="sortTable(4)">$/SqFt</th>
+                            <th onclick="sortTable(5)">Beds</th>
+                            <th onclick="sortTable(6)">Baths</th>
+                            <th onclick="sortTable(7)">Sold Date</th>
+                            <th onclick="sortTable(8)">DOM</th>
+                            <th onclick="sortTable(9)">Features</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertyData">
+                        <!-- Property data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All property data from CSV
+        const properties = [
+    {
+        "mls": "RX-10839966",
+        "address": "16137 Pantheon Pass",
+        "price": 1080000,
+        "sqft": 2609,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "01/31/2023",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 84
+    },
+    {
+        "mls": "RX-10680915",
+        "address": "16855 Pavilion Way",
+        "price": 1529900,
+        "sqft": 3937,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "03/31/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 9
+    },
+    {
+        "mls": "RX-10652546",
+        "address": "16581 Fleur De Lis Way",
+        "price": 3050000,
+        "sqft": 7875,
+        "beds": 6,
+        "baths": 8.5,
+        "soldDate": "10/15/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 20
+    },
+    {
+        "mls": "RX-10630220",
+        "address": "16352 Cabernet Drive",
+        "price": 1350000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "10/19/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 70
+    },
+    {
+        "mls": "RX-10635513",
+        "address": "9030 Moriset Court",
+        "price": 1265000,
+        "sqft": 5015,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "10/20/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 9
+    },
+    {
+        "mls": "RX-10635313",
+        "address": "9518 Eden Roc Court",
+        "price": 830000,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "10/19/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 67
+    },
+    {
+        "mls": "RX-10660105",
+        "address": "9338 Eden Roc Court",
+        "price": 842930,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "10/23/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 12
+    },
+    {
+        "mls": "RX-10608036",
+        "address": "9729 Montpellier Drive",
+        "price": 1389000,
+        "sqft": 5075,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "10/23/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 120
+    },
+    {
+        "mls": "RX-10635822",
+        "address": "9817 Montpellier Drive",
+        "price": 1875000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 7.0,
+        "soldDate": "10/23/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 53
+    },
+    {
+        "mls": "RX-10655821",
+        "address": "16950 Pavilion Way",
+        "price": 1490000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "11/02/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10652028",
+        "address": "9475 Eden Roc Court",
+        "price": 1275000,
+        "sqft": 4331,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "11/12/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 24
+    },
+    {
+        "mls": "RX-10637276",
+        "address": "9901 Bozzano Drive",
+        "price": 1133000,
+        "sqft": 3042,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "11/13/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2019,
+        "dom": 89
+    },
+    {
+        "mls": "RX-10636874",
+        "address": "9095 Moriset Court",
+        "price": 920000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "11/02/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 57
+    },
+    {
+        "mls": "RX-10646206",
+        "address": "16912 Pierre Circle",
+        "price": 1610000,
+        "sqft": 4440,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "11/20/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 27
+    },
+    {
+        "mls": "RX-10634745",
+        "address": "9481 Eden Roc Court",
+        "price": 960000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "10/23/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 62
+    },
+    {
+        "mls": "RX-10624361",
+        "address": "9059 Moriset Court",
+        "price": 1135000,
+        "sqft": 3987,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "11/25/2020",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 144
+    },
+    {
+        "mls": "AX-10884450",
+        "address": "9320 Tropez Lane",
+        "price": 1525000,
+        "sqft": 5216,
+        "beds": 4,
+        "baths": 7.5,
+        "soldDate": "12/01/2020",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 85
+    },
+    {
+        "mls": "RX-10640942",
+        "address": "16929 Pierre Circle",
+        "price": 1175000,
+        "sqft": 3396,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "12/03/2020",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 95
+    },
+    {
+        "mls": "RX-10619122",
+        "address": "9742 Rennes Lane",
+        "price": 1550000,
+        "sqft": 3968,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "12/01/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 183
+    },
+    {
+        "mls": "RX-10656818",
+        "address": "16715 Cannes Street",
+        "price": 2050000,
+        "sqft": 5216,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "12/07/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 10
+    },
+    {
+        "mls": "AX-10930427",
+        "address": "16394 Cabernet Drive",
+        "price": 855000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "12/10/2020",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 63
+    },
+    {
+        "mls": "RX-10657098",
+        "address": "9560 Balenciaga Court",
+        "price": 3075000,
+        "sqft": 7875,
+        "beds": 6,
+        "baths": 8.5,
+        "soldDate": "12/17/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 46
+    },
+    {
+        "mls": "RX-10657128",
+        "address": "16388 Cabernet Drive",
+        "price": 1279000,
+        "sqft": 4735,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "12/17/2020",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 31
+    },
+    {
+        "mls": "AX-10912927",
+        "address": "9766 Vitrail Lane",
+        "price": 1340000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "12/16/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10673366",
+        "address": "9029 Moriset Court",
+        "price": 1100000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "12/22/2020",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 7
+    },
+    {
+        "mls": "RX-10646978",
+        "address": "16722 Cannes Street",
+        "price": 2950000,
+        "sqft": 5892,
+        "beds": 8,
+        "baths": 9.5,
+        "soldDate": "12/18/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 87
+    },
+    {
+        "mls": "RX-10663421",
+        "address": "9529 Eden Roc Court",
+        "price": 1075000,
+        "sqft": 4331,
+        "beds": 6,
+        "baths": 5.0,
+        "soldDate": "12/31/2020",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 29
+    },
+    {
+        "mls": "RX-10661209",
+        "address": "9325 Eden Roc Court",
+        "price": 1179900,
+        "sqft": 4331,
+        "beds": 6,
+        "baths": 6.0,
+        "soldDate": "01/15/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 38
+    },
+    {
+        "mls": "RX-10652332",
+        "address": "16334 Cabernet Drive",
+        "price": 810000,
+        "sqft": 2609,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "01/11/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 74
+    },
+    {
+        "mls": "AX-10875767",
+        "address": "9850 Rennes Lane",
+        "price": 1670000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 8.5,
+        "soldDate": "01/29/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 190
+    },
+    {
+        "mls": "RX-10583768",
+        "address": "16256 Pantheon Pass",
+        "price": 830000,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "01/29/2021",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 212
+    },
+    {
+        "mls": "RX-10667388",
+        "address": "16364 Cabernet Drive",
+        "price": 1200000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "02/19/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 62
+    },
+    {
+        "mls": "RX-10680102",
+        "address": "16896 Pavilion Way",
+        "price": 1500000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "02/23/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10667924",
+        "address": "16832 Matisse Drive",
+        "price": 2050000,
+        "sqft": 4589,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "02/08/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 47
+    },
+    {
+        "mls": "RX-10676800",
+        "address": "9807 Vitrail Lane",
+        "price": 1398000,
+        "sqft": 4820,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "03/01/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 13
+    },
+    {
+        "mls": "RX-10653479",
+        "address": "16832 Pierre Circle",
+        "price": 1645000,
+        "sqft": 4440,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "03/04/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 141
+    },
+    {
+        "mls": "RX-10684244",
+        "address": "9818 Bozzano Drive",
+        "price": 1400000,
+        "sqft": 3057,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "03/08/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 24
+    },
+    {
+        "mls": "RX-10679384",
+        "address": "9794 Bozzano Drive",
+        "price": 1325000,
+        "sqft": 3987,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "02/25/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 7
+    },
+    {
+        "mls": "RX-11076611",
+        "address": "9790 Rennes Lane",
+        "price": 2670000,
+        "sqft": 5529,
+        "beds": 4,
+        "baths": 6.0,
+        "soldDate": "09/19/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 81
+    },
+    {
+        "mls": "RX-11116271",
+        "address": "16969 Pavilion Way",
+        "price": 1825000,
+        "sqft": 4248,
+        "beds": 5,
+        "baths": 5.5,
+        "soldDate": "10/08/2025",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 10
+    },
+    {
+        "mls": "RX-11090860",
+        "address": "9288 Tropez Lane",
+        "price": 2000000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/27/2025",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 46
+    },
+    {
+        "mls": "AX-11814690",
+        "address": "9368 Eden Roc Court",
+        "price": 1850000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "08/29/2025",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10702429",
+        "address": "16726 Picardy Way",
+        "price": 1300000,
+        "sqft": 4331,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "05/27/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 7
+    },
+    {
+        "mls": "FX-10283667",
+        "address": "9338 Eden Roc Court",
+        "price": 1070000,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "05/28/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 5
+    },
+    {
+        "mls": "RX-10680718",
+        "address": "9809 Montpellier Drive",
+        "price": 2210000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "06/01/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 78
+    },
+    {
+        "mls": "AX-11018911",
+        "address": "9565 Eden Roc Court",
+        "price": 1200000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "06/18/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 31
+    },
+    {
+        "mls": "RX-10685021",
+        "address": "9717 Rennes Lane",
+        "price": 2225000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 8.5,
+        "soldDate": "06/30/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 38
+    },
+    {
+        "mls": "RX-10699527",
+        "address": "9482 Eden Roc Court",
+        "price": 1265000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "07/01/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 17
+    },
+    {
+        "mls": "RX-11002328",
+        "address": "9397 Eden Roc Court",
+        "price": 1275000,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "12/16/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 103
+    },
+    {
+        "mls": "RX-11011549",
+        "address": "16340 Cabernet Drive",
+        "price": 1545000,
+        "sqft": 3277,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "12/18/2024",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2019,
+        "dom": 80
+    },
+    {
+        "mls": "RX-10709987",
+        "address": "9783 Vitrail Lane",
+        "price": 1550000,
+        "sqft": 3057,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "07/09/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 34
+    },
+    {
+        "mls": "FX-10282522",
+        "address": "16388 Cabernet Drive",
+        "price": 1600000,
+        "sqft": 4735,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "07/09/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 2
+    },
+    {
+        "mls": "RX-11042612",
+        "address": "9578 Eden Roc Court",
+        "price": 1300000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "05/12/2025",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 97
+    },
+    {
+        "mls": "RX-10710309",
+        "address": "9391 Eden Roc Court",
+        "price": 1450000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "07/15/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10719866",
+        "address": "16226 Cabernet Drive",
+        "price": 1395000,
+        "sqft": 3593,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "07/30/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 9
+    },
+    {
+        "mls": "RX-10704053",
+        "address": "16305 Pantheon Pass",
+        "price": 1750000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "08/06/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10729827",
+        "address": "9786 Montpellier Drive",
+        "price": 2875000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 7.0,
+        "soldDate": "10/26/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 40
+    },
+    {
+        "mls": "RX-10832924",
+        "address": "9825 Montpellier Drive",
+        "price": 2000000,
+        "sqft": 3968,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "11/18/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 24
+    },
+    {
+        "mls": "FX-10263227",
+        "address": "16533 Fleur De Lis Way",
+        "price": 2312500,
+        "sqft": 4798,
+        "beds": 4,
+        "baths": 5.5,
+        "soldDate": "11/09/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 237
+    },
+    {
+        "mls": "RX-10747573",
+        "address": "9800 Bozzano Drive",
+        "price": 1515000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "11/15/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2019,
+        "dom": 5
+    },
+    {
+        "mls": "RX-10739484",
+        "address": "9736 Vitrail Lane",
+        "price": 1700000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "11/01/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 42
+    },
+    {
+        "mls": "AX-11105684",
+        "address": "9307 Eden Roc Court",
+        "price": 1435000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "11/18/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 19
+    },
+    {
+        "mls": "RX-10760774",
+        "address": "9795 Vitrail Lane",
+        "price": 1600000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "11/23/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10723821",
+        "address": "16951 Pavilion Way",
+        "price": 2250000,
+        "sqft": 5233,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "11/23/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10749449",
+        "address": "16382 Cabernet Drive",
+        "price": 1260000,
+        "sqft": 3277,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "11/29/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 10
+    },
+    {
+        "mls": "RX-10736605",
+        "address": "9397 Eden Roc Court",
+        "price": 1250000,
+        "sqft": 2460,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "12/03/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 73
+    },
+    {
+        "mls": "RX-10758128",
+        "address": "9524 Eden Roc Court",
+        "price": 1525000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "12/21/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 3
+    },
+    {
+        "mls": "RX-10722869",
+        "address": "9583 Eden Roc Court",
+        "price": 1250000,
+        "sqft": 3537,
+        "beds": 5,
+        "baths": 4.0,
+        "soldDate": "06/10/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10761968",
+        "address": "9759 Vitrail Lane",
+        "price": 1599000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "12/30/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 1
+    },
+    {
+        "mls": "RX-10899028",
+        "address": "9536 Eden Roc Court",
+        "price": 1225000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "09/26/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 20
+    },
+    {
+        "mls": "RX-10921105",
+        "address": "16812 Strasbourg Lane",
+        "price": 2999999,
+        "sqft": 6171,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "10/16/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 6
+    },
+    {
+        "mls": "AX-11401042",
+        "address": "16969 Pavilion Way",
+        "price": 1725000,
+        "sqft": 4248,
+        "beds": 5,
+        "baths": 5.5,
+        "soldDate": "11/07/2023",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 126
+    },
+    {
+        "mls": "RX-10649441",
+        "address": "16783 Pavilion Way",
+        "price": 1325000,
+        "sqft": 3249,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "03/26/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 151
+    },
+    {
+        "mls": "RX-10676097",
+        "address": "9575 Moritz Way",
+        "price": 2050000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "03/29/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 45
+    },
+    {
+        "mls": "AX-10994683",
+        "address": "16903 Pavilion Way",
+        "price": 1300000,
+        "sqft": 3057,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "03/31/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 13
+    },
+    {
+        "mls": "AX-10958956",
+        "address": "16844 Strasbourg Lane",
+        "price": 1980000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "04/01/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 68
+    },
+    {
+        "mls": "RX-10688958",
+        "address": "16897 Pierre Circle",
+        "price": 1300000,
+        "sqft": 4440,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "03/31/2021",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 6
+    },
+    {
+        "mls": "RX-10707273",
+        "address": "9066 Moriset Court",
+        "price": 1430000,
+        "sqft": 3249,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "04/12/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10690153",
+        "address": "9344 Eden Roc Court",
+        "price": 1225000,
+        "sqft": 3593,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "04/06/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10693561",
+        "address": "16557 Fleur De Lis Way",
+        "price": 2162500,
+        "sqft": 4651,
+        "beds": 3,
+        "baths": 4.5,
+        "soldDate": "04/20/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 12
+    },
+    {
+        "mls": "AX-11014941",
+        "address": "9765 Vitrail Lane",
+        "price": 1599000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "04/22/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 3
+    },
+    {
+        "mls": "RX-10697821",
+        "address": "16379 Corvino Court",
+        "price": 1599000,
+        "sqft": 5233,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "04/23/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 5
+    },
+    {
+        "mls": "RX-10715007",
+        "address": "16394 Pantheon Pass",
+        "price": 1299000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "06/22/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 7
+    },
+    {
+        "mls": "RX-10710003",
+        "address": "9517 Eden Roc Court",
+        "price": 1550000,
+        "sqft": 4331,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "06/21/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 1
+    },
+    {
+        "mls": "RX-10689016",
+        "address": "16623 Fleur De Lis Way",
+        "price": 1800000,
+        "sqft": 4973,
+        "beds": 4,
+        "baths": 5.5,
+        "soldDate": "04/29/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": -84
+    },
+    {
+        "mls": "RX-10660317",
+        "address": "9312 Tropez Lane",
+        "price": 1725000,
+        "sqft": 5216,
+        "beds": 4,
+        "baths": 7.5,
+        "soldDate": "04/30/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 101
+    },
+    {
+        "mls": "RX-10625329",
+        "address": "9535 Eden Roc Court",
+        "price": 865000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "04/29/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 228
+    },
+    {
+        "mls": "RX-10607641",
+        "address": "16840 Matisse Drive",
+        "price": 2485000,
+        "sqft": 7506,
+        "beds": 6,
+        "baths": 7.5,
+        "soldDate": "05/03/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 70
+    },
+    {
+        "mls": "RX-10692191",
+        "address": "9746 Bozzano Drive",
+        "price": 1412500,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "05/07/2021",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 41
+    },
+    {
+        "mls": "RX-10689541",
+        "address": "9562 Labelle Court",
+        "price": 2800000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "05/14/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10695278",
+        "address": "16376 Cabernet Drive",
+        "price": 1565000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "05/14/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 3
+    },
+    {
+        "mls": "RX-10705555",
+        "address": "9747 Vitrail Lane",
+        "price": 2200000,
+        "sqft": 5233,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "05/17/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 8
+    },
+    {
+        "mls": "RX-10698395",
+        "address": "9071 Moriset Court",
+        "price": 1600000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "05/14/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 3
+    },
+    {
+        "mls": "RX-10691283",
+        "address": "9289 Tropez Lane",
+        "price": 1900000,
+        "sqft": 5216,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "05/14/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 33
+    },
+    {
+        "mls": "RX-10757407",
+        "address": "9949 Bozzano Drive",
+        "price": 1415000,
+        "sqft": 3057,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "01/10/2022",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 31
+    },
+    {
+        "mls": "RX-10770042",
+        "address": "16226 Cabernet Drive",
+        "price": 1590000,
+        "sqft": 3593,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "01/14/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 0
+    },
+    {
+        "mls": "AX-11064268",
+        "address": "16849 Pavilion Way",
+        "price": 2000000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "12/31/2021",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 147
+    },
+    {
+        "mls": "RX-10762321",
+        "address": "16359 Pantheon Pass",
+        "price": 1370000,
+        "sqft": 3277,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "02/01/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10734406",
+        "address": "16926 Pavilion Way",
+        "price": 1850000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "02/09/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 87
+    },
+    {
+        "mls": "RX-10743023",
+        "address": "16591 Germaine Drive",
+        "price": 1625000,
+        "sqft": 4022,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "02/24/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 4
+    },
+    {
+        "mls": "RX-10764573",
+        "address": "9641 Labelle Court",
+        "price": 2700000,
+        "sqft": 4658,
+        "beds": 3,
+        "baths": 5.5,
+        "soldDate": "02/22/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10754575",
+        "address": "16796 Strasbourg Lane",
+        "price": 2400000,
+        "sqft": 5216,
+        "beds": 4,
+        "baths": 7.5,
+        "soldDate": "02/10/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 44
+    },
+    {
+        "mls": "RX-10773941",
+        "address": "9610 Labelle Court",
+        "price": 3763000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "03/31/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 4
+    },
+    {
+        "mls": "RX-10771375",
+        "address": "9730 Rennes Lane",
+        "price": 2825000,
+        "sqft": 3968,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "03/28/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 5
+    },
+    {
+        "mls": "RX-10762122",
+        "address": "16833 Pierre Circle",
+        "price": 1625000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "04/01/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 15
+    },
+    {
+        "mls": "RX-10770987",
+        "address": "16645 Germaine Drive",
+        "price": 1670000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "04/15/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 22
+    },
+    {
+        "mls": "RX-10772412",
+        "address": "16786 Couture Court",
+        "price": 3100000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "04/07/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": -1
+    },
+    {
+        "mls": "FX-10318452",
+        "address": "9626 Labelle Court",
+        "price": 3200000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "04/25/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 9
+    },
+    {
+        "mls": "RX-10775374",
+        "address": "16346 Cabernet Drive",
+        "price": 2600000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "04/28/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 11
+    },
+    {
+        "mls": "RX-10784484",
+        "address": "9757 Bozzano Drive",
+        "price": 2460000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "05/02/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 7
+    },
+    {
+        "mls": "RX-10755776",
+        "address": "9770 Bozzano Drive",
+        "price": 1825000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "05/16/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 34
+    },
+    {
+        "mls": "RX-10784837",
+        "address": "16596 Germaine Drive",
+        "price": 2300000,
+        "sqft": 4331,
+        "beds": 6,
+        "baths": 6.0,
+        "soldDate": "05/20/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10752797",
+        "address": "9599 Moritz Way",
+        "price": 2815000,
+        "sqft": 4820,
+        "beds": 4,
+        "baths": 5.5,
+        "soldDate": "05/20/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 136
+    },
+    {
+        "mls": "RX-10789772",
+        "address": "9505 Eden Roc Court",
+        "price": 1398000,
+        "sqft": 2609,
+        "beds": 4,
+        "baths": 3.0,
+        "soldDate": "06/01/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2016,
+        "dom": 6
+    },
+    {
+        "mls": "RX-10791791",
+        "address": "16751 Picardy Way",
+        "price": 2425000,
+        "sqft": 4820,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "06/01/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2020,
+        "dom": 19
+    },
+    {
+        "mls": "RX-10800058",
+        "address": "16388 Pantheon Pass",
+        "price": 1850000,
+        "sqft": 3593,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "06/15/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10782122",
+        "address": "16130 Pantheon Pass",
+        "price": 2090000,
+        "sqft": 4331,
+        "beds": 6,
+        "baths": 5.0,
+        "soldDate": "06/30/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 76
+    },
+    {
+        "mls": "RX-10803686",
+        "address": "9776 Bozzano Drive",
+        "price": 1699000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "07/07/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 6
+    },
+    {
+        "mls": "RX-10798332",
+        "address": "9488 Eden Roc Court",
+        "price": 2000000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "07/08/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 14
+    },
+    {
+        "mls": "RX-10777008",
+        "address": "16873 Pierre Circle",
+        "price": 2750000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "06/30/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 57
+    },
+    {
+        "mls": "FX-10332222",
+        "address": "16298 Pantheon Pass",
+        "price": 2400000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "07/29/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 17
+    },
+    {
+        "mls": "RX-10809272",
+        "address": "16750 Picardy Way",
+        "price": 1500000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "08/29/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2020,
+        "dom": 22
+    },
+    {
+        "mls": "RX-10807970",
+        "address": "9301 Eden Roc Court",
+        "price": 1175000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "09/08/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10794510",
+        "address": "16686 Picardy Way",
+        "price": 2500000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "09/12/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 17
+    },
+    {
+        "mls": "RX-10798823",
+        "address": "9724 Rennes Lane",
+        "price": 2050000,
+        "sqft": 3968,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "09/02/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 18
+    },
+    {
+        "mls": "RX-10806204",
+        "address": "9913 Bozzano Drive",
+        "price": 2200000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "09/02/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 54
+    },
+    {
+        "mls": "RX-10815338",
+        "address": "9820 Vitrail Lane",
+        "price": 1725000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "10/27/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 50
+    },
+    {
+        "mls": "RX-10817994",
+        "address": "16239 Cabernet Drive",
+        "price": 1400000,
+        "sqft": 3277,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "11/08/2022",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 52
+    },
+    {
+        "mls": "RX-10814473",
+        "address": "9814 Vitrail Lane",
+        "price": 1800000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "11/16/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 73
+    },
+    {
+        "mls": "RX-10827963",
+        "address": "16143 Pantheon Pass",
+        "price": 1320000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "12/01/2022",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 4
+    },
+    {
+        "mls": "RX-10838681",
+        "address": "16929 Pierre Circle",
+        "price": 1650000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "12/02/2022",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2015,
+        "dom": 12
+    },
+    {
+        "mls": "RX-10823561",
+        "address": "16702 Picardy Way",
+        "price": 2650000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "12/08/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 69
+    },
+    {
+        "mls": "RX-10837497",
+        "address": "9795 Rennes Lane",
+        "price": 2825000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 8.5,
+        "soldDate": "12/23/2022",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 14
+    },
+    {
+        "mls": "RX-10848646",
+        "address": "9736 Rennes Lane",
+        "price": 2650000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 8.5,
+        "soldDate": "01/30/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 22
+    },
+    {
+        "mls": "RX-10857166",
+        "address": "9559 Balenciaga Court",
+        "price": 4599000,
+        "sqft": 7875,
+        "beds": 6,
+        "baths": 8.5,
+        "soldDate": "02/21/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 8
+    },
+    {
+        "mls": "RX-10805850",
+        "address": "9583 Moritz Way",
+        "price": 3325000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 8.0,
+        "soldDate": "03/01/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 201
+    },
+    {
+        "mls": "RX-10854233",
+        "address": "9071 Moriset Court",
+        "price": 1750000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "03/21/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 13
+    },
+    {
+        "mls": "RX-10797408",
+        "address": "9535 Balenciaga Court",
+        "price": 3200000,
+        "sqft": 7869,
+        "beds": 6,
+        "baths": 8.5,
+        "soldDate": "03/21/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 268
+    },
+    {
+        "mls": "RX-10839462",
+        "address": "16256 Cabernet Drive",
+        "price": 1115000,
+        "sqft": 2450,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "03/30/2023",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2019,
+        "dom": 106
+    },
+    {
+        "mls": "RX-10852474",
+        "address": "9748 Rennes Lane",
+        "price": 2900000,
+        "sqft": 5892,
+        "beds": 7,
+        "baths": 7.5,
+        "soldDate": "03/30/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 2
+    },
+    {
+        "mls": "RX-10845025",
+        "address": "16825 Matisse Drive",
+        "price": 4285000,
+        "sqft": 8071,
+        "beds": 6,
+        "baths": 9.0,
+        "soldDate": "04/10/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 53
+    },
+    {
+        "mls": "RX-11025544",
+        "address": "9814 Vitrail Lane",
+        "price": 2100000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "01/23/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 92
+    },
+    {
+        "mls": "RX-10857640",
+        "address": "16921 Pavilion Way",
+        "price": 1800000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "04/20/2023",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 45
+    },
+    {
+        "mls": "RX-10861505",
+        "address": "16274 Pantheon Pass",
+        "price": 1450000,
+        "sqft": 3277,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "04/25/2023",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 6
+    },
+    {
+        "mls": "RX-10869245",
+        "address": "16328 Cabernet Drive",
+        "price": 1215000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "04/26/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 8
+    },
+    {
+        "mls": "RX-10861927",
+        "address": "9296 Tropez Lane",
+        "price": 2600000,
+        "sqft": 5520,
+        "beds": 5,
+        "baths": 7.0,
+        "soldDate": "04/28/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 10
+    },
+    {
+        "mls": "RX-11023744",
+        "address": "16864 Matisse Drive",
+        "price": 3085000,
+        "sqft": 4973,
+        "beds": 4,
+        "baths": 5.5,
+        "soldDate": "01/27/2025",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 10
+    },
+    {
+        "mls": "RX-10882156",
+        "address": "16750 Picardy Way",
+        "price": 1550000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "05/31/2023",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2020,
+        "dom": 8
+    },
+    {
+        "mls": "RX-10860951",
+        "address": "16857 Pierre Circle",
+        "price": 2675000,
+        "sqft": 5263,
+        "beds": 6,
+        "baths": 7.5,
+        "soldDate": "06/01/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 29
+    },
+    {
+        "mls": "RX-10877301",
+        "address": "9718 Rennes Lane",
+        "price": 2675000,
+        "sqft": 3968,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "06/15/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 3
+    },
+    {
+        "mls": "RX-10871209",
+        "address": "16865 Pierre Circle",
+        "price": 2800000,
+        "sqft": 5225,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "06/16/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 56
+    },
+    {
+        "mls": "FX-10365470",
+        "address": "9512 Eden Roc Court",
+        "price": 1100000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "06/28/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 123
+    },
+    {
+        "mls": "RX-10881073",
+        "address": "16142 Pantheon Pass",
+        "price": 1995000,
+        "sqft": 4387,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "07/14/2023",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 41
+    },
+    {
+        "mls": "RX-10879581",
+        "address": "9030 Moriset Court",
+        "price": 1925000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "07/20/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 75
+    },
+    {
+        "mls": "RX-10878386",
+        "address": "16335 Cabernet Drive",
+        "price": 1300000,
+        "sqft": 3537,
+        "beds": 5,
+        "baths": 4.0,
+        "soldDate": "07/28/2023",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 45
+    },
+    {
+        "mls": "RX-10888548",
+        "address": "16879 Pavilion Way",
+        "price": 2095000,
+        "sqft": 3932,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "08/01/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 7
+    },
+    {
+        "mls": "FX-10380982",
+        "address": "9349 Eden Roc Court",
+        "price": 1585000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "08/04/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 36
+    },
+    {
+        "mls": "RX-10887288",
+        "address": "16566 Fleur De Lis Way",
+        "price": 3950000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "08/11/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 42
+    },
+    {
+        "mls": "RX-10900828",
+        "address": "9765 Rennes Lane",
+        "price": 1775000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/25/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 8
+    },
+    {
+        "mls": "RX-10904077",
+        "address": "16900 Strasbourg Lane",
+        "price": 3300000,
+        "sqft": 6155,
+        "beds": 5,
+        "baths": 5.5,
+        "soldDate": "11/16/2023",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 97
+    },
+    {
+        "mls": "RX-11030749",
+        "address": "16856 Pierre Circle",
+        "price": 2900000,
+        "sqft": 5529,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "01/06/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": -10
+    },
+    {
+        "mls": "RX-10996653",
+        "address": "16735 Picardy Way",
+        "price": 2100000,
+        "sqft": 3987,
+        "beds": 5,
+        "baths": 5.5,
+        "soldDate": "02/13/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2020,
+        "dom": 141
+    },
+    {
+        "mls": "RX-11044897",
+        "address": "9313 Tropez Lane",
+        "price": 2200000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "03/14/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 49
+    },
+    {
+        "mls": "RX-11054116",
+        "address": "16215 Cabernet Drive",
+        "price": 1550000,
+        "sqft": 4331,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "03/20/2025",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 42
+    },
+    {
+        "mls": "RX-11010444",
+        "address": "9542 Eden Roc Court",
+        "price": 1600000,
+        "sqft": 4331,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "03/31/2025",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 159
+    },
+    {
+        "mls": "RX-11024724",
+        "address": "16825 Matisse Drive",
+        "price": 4680000,
+        "sqft": 8071,
+        "beds": 6,
+        "baths": 9.0,
+        "soldDate": "04/09/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 152
+    },
+    {
+        "mls": "RX-11072207",
+        "address": "9561 Labelle Court",
+        "price": 2975000,
+        "sqft": 4694,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "05/12/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 19
+    },
+    {
+        "mls": "RX-11051637",
+        "address": "16804 Couture Court",
+        "price": 3850000,
+        "sqft": 6171,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "05/22/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 25
+    },
+    {
+        "mls": "RX-11068208",
+        "address": "9782 Bozzano Drive",
+        "price": 1975000,
+        "sqft": 3987,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "05/27/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 54
+    },
+    {
+        "mls": "RX-11071019",
+        "address": "9042 Moriset Court",
+        "price": 2100000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "06/02/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 36
+    },
+    {
+        "mls": "FX-10483507",
+        "address": "9838 Vitrail Lane",
+        "price": 2200000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 6.5,
+        "soldDate": "06/18/2025",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 86
+    },
+    {
+        "mls": "FX-10488614",
+        "address": "9589 Eden Roc Court",
+        "price": 1858000,
+        "sqft": 4331,
+        "beds": 6,
+        "baths": 5.0,
+        "soldDate": "06/20/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 78
+    },
+    {
+        "mls": "RX-11086024",
+        "address": "16317 Cabernet Drive",
+        "price": 1917000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "06/26/2025",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2018,
+        "dom": 25
+    },
+    {
+        "mls": "RX-11049962",
+        "address": "9831 Vitrail Lane",
+        "price": 2225000,
+        "sqft": 5233,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "06/26/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 109
+    },
+    {
+        "mls": "RX-11081005",
+        "address": "9595 Eden Roc Court",
+        "price": 1987500,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "07/03/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 36
+    },
+    {
+        "mls": "RX-11090368",
+        "address": "16963 Pavilion Way",
+        "price": 1500000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "07/01/2025",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 17
+    },
+    {
+        "mls": "RX-11074835",
+        "address": "16836 Strasbourg Lane",
+        "price": 2500000,
+        "sqft": 5892,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "07/16/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 98
+    },
+    {
+        "mls": "RX-11054411",
+        "address": "9748 Rennes Lane",
+        "price": 2800000,
+        "sqft": 5892,
+        "beds": 7,
+        "baths": 7.5,
+        "soldDate": "07/25/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 159
+    },
+    {
+        "mls": "RX-11095338",
+        "address": "9385 Eden Roc Court",
+        "price": 1700000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "08/15/2025",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 26
+    },
+    {
+        "mls": "RX-10675778",
+        "address": "16885 Pavilion Way",
+        "price": 1475000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "03/25/2021",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 58
+    },
+    {
+        "mls": "RX-11030222",
+        "address": "9736 Vitrail Lane",
+        "price": 1825000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "02/28/2025",
+        "waterfront": "Yes",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 89
+    },
+    {
+        "mls": "RX-11031109",
+        "address": "9807 Vitrail Lane",
+        "price": 2370000,
+        "sqft": 4820,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "12/20/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 4
+    },
+    {
+        "mls": "RX-11031618",
+        "address": "16317 Pantheon Pass",
+        "price": 1592000,
+        "sqft": 3378,
+        "beds": 3,
+        "baths": 4.0,
+        "soldDate": "04/17/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 87
+    },
+    {
+        "mls": "RX-10916861",
+        "address": "16262 Pantheon Pass",
+        "price": 1590016,
+        "sqft": 3277,
+        "beds": 3,
+        "baths": 4.0,
+        "soldDate": "12/20/2023",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 10
+    },
+    {
+        "mls": "RX-10917537",
+        "address": "16184 Pantheon Pass",
+        "price": 1535000,
+        "sqft": 3277,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "01/03/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 48
+    },
+    {
+        "mls": "RX-10905379",
+        "address": "9889 Bozzano Drive",
+        "price": 1712000,
+        "sqft": 3987,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "01/05/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 99
+    },
+    {
+        "mls": "RX-10916857",
+        "address": "16382 Pantheon Pass",
+        "price": 1400000,
+        "sqft": 3593,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "01/10/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 66
+    },
+    {
+        "mls": "RX-10935587",
+        "address": "9711 Rennes Lane",
+        "price": 3070500,
+        "sqft": 6171,
+        "beds": 7,
+        "baths": 7.0,
+        "soldDate": "01/29/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 23
+    },
+    {
+        "mls": "RX-10926649",
+        "address": "16197 Cabernet Drive",
+        "price": 2350000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "03/01/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 57
+    },
+    {
+        "mls": "RX-10965076",
+        "address": "16173 Pantheon Pass",
+        "price": 1350000,
+        "sqft": 3378,
+        "beds": 5,
+        "baths": 4.0,
+        "soldDate": "03/05/2024",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2017,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10938343",
+        "address": "9847 Bozzano Drive",
+        "price": 1950000,
+        "sqft": 4248,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "03/19/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 75
+    },
+    {
+        "mls": "RX-10951644",
+        "address": "16238 Cabernet Drive",
+        "price": 2100000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "03/29/2024",
+        "waterfront": "No",
+        "pool": "No",
+        "yearBuilt": 2019,
+        "dom": 11
+    },
+    {
+        "mls": "RX-10935426",
+        "address": "16825 Pavilion Way",
+        "price": 2350000,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "04/10/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10962641",
+        "address": "16598 Fleur De Lis Way",
+        "price": 3825000,
+        "sqft": 7757,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "04/10/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 17
+    },
+    {
+        "mls": "RX-10939698",
+        "address": "9742 Vitrail Lane",
+        "price": 2400000,
+        "sqft": 4248,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "04/05/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 101
+    },
+    {
+        "mls": "RX-10953302",
+        "address": "16573 Fleur De Lis Way",
+        "price": 3150000,
+        "sqft": 4814,
+        "beds": 5,
+        "baths": 5.5,
+        "soldDate": "04/15/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 69
+    },
+    {
+        "mls": "AX-11430560",
+        "address": "9541 Eden Roc Court",
+        "price": 1550000,
+        "sqft": 4331,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "04/04/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 147
+    },
+    {
+        "mls": "RX-10956911",
+        "address": "16359 Pantheon Pass",
+        "price": 1610000,
+        "sqft": 3277,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "05/02/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 1
+    },
+    {
+        "mls": "RX-10949471",
+        "address": "16149 Pantheon Pass",
+        "price": 1920000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "05/10/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 86
+    },
+    {
+        "mls": "RX-10959599",
+        "address": "16756 Strasbourg Lane",
+        "price": 2125000,
+        "sqft": 3968,
+        "beds": 4,
+        "baths": 5.0,
+        "soldDate": "04/29/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 30
+    },
+    {
+        "mls": "RX-10965259",
+        "address": "16896 Pavilion Way",
+        "price": 2468500,
+        "sqft": 5188,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "06/13/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 73
+    },
+    {
+        "mls": "RX-10949366",
+        "address": "9777 Vitrail Lane",
+        "price": 2100000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "06/18/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 129
+    },
+    {
+        "mls": "RX-10971978",
+        "address": "9577 Eden Roc Court",
+        "price": 1375000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "06/20/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 3
+    },
+    {
+        "mls": "FX-10433627",
+        "address": "16716 Strasbourg Lane",
+        "price": 2750000,
+        "sqft": 5529,
+        "beds": 6,
+        "baths": 7.0,
+        "soldDate": "06/21/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 10
+    },
+    {
+        "mls": "RX-10937933",
+        "address": "16695 Picardy Way",
+        "price": 2325000,
+        "sqft": 4248,
+        "beds": 5,
+        "baths": 4.5,
+        "soldDate": "06/21/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 170
+    },
+    {
+        "mls": "FX-10431575",
+        "address": "16143 Pantheon Pass",
+        "price": 1520000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "07/01/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 27
+    },
+    {
+        "mls": "RX-11007201",
+        "address": "9865 Bozzano Drive",
+        "price": 1960000,
+        "sqft": 4248,
+        "beds": 3,
+        "baths": 4.5,
+        "soldDate": "07/25/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 0
+    },
+    {
+        "mls": "RX-10955875",
+        "address": "16807 Pavilion Way",
+        "price": 1998000,
+        "sqft": 3258,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/01/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 37
+    },
+    {
+        "mls": "RX-11035378",
+        "address": "16328 Cabernet Drive",
+        "price": 1500000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "01/30/2025",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 4
+    },
+    {
+        "mls": "RX-10968357",
+        "address": "16348 Corvino Court",
+        "price": 2100000,
+        "sqft": 3057,
+        "beds": 4,
+        "baths": 3.5,
+        "soldDate": "08/07/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 75
+    },
+    {
+        "mls": "RX-10959110",
+        "address": "16322 Cabernet Drive",
+        "price": 1625000,
+        "sqft": 3277,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/15/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 26
+    },
+    {
+        "mls": "RX-10956871",
+        "address": "16298 Pantheon Pass",
+        "price": 2050000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "08/15/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 169
+    },
+    {
+        "mls": "AX-11541520",
+        "address": "16928 Pierre Circle",
+        "price": 2400000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/22/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2015,
+        "dom": 102
+    },
+    {
+        "mls": "RX-11005078",
+        "address": "16732 Strasbourg Lane",
+        "price": 2000000,
+        "sqft": 3373,
+        "beds": 3,
+        "baths": 3.5,
+        "soldDate": "08/26/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 15
+    },
+    {
+        "mls": "RX-10978531",
+        "address": "16710 Picardy Way",
+        "price": 1800000,
+        "sqft": 3537,
+        "beds": 4,
+        "baths": 4.0,
+        "soldDate": "08/30/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 104
+    },
+    {
+        "mls": "RX-10994349",
+        "address": "16686 Picardy Way",
+        "price": 2425000,
+        "sqft": 3932,
+        "beds": 5,
+        "baths": 5.0,
+        "soldDate": "09/04/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 23
+    },
+    {
+        "mls": "RX-10934280",
+        "address": "9578 Labelle Court",
+        "price": 4650000,
+        "sqft": 7869,
+        "beds": 6,
+        "baths": 8.5,
+        "soldDate": "09/16/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2018,
+        "dom": 204
+    },
+    {
+        "mls": "RX-10998965",
+        "address": "16148 Pantheon Pass",
+        "price": 2200000,
+        "sqft": 4783,
+        "beds": 5,
+        "baths": 6.0,
+        "soldDate": "09/30/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 6
+    },
+    {
+        "mls": "RX-10987531",
+        "address": "9729 Vitrail Lane",
+        "price": 2275000,
+        "sqft": 5233,
+        "beds": 5,
+        "baths": 7.5,
+        "soldDate": "10/10/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 87
+    },
+    {
+        "mls": "RX-11007906",
+        "address": "9813 Vitrail Lane",
+        "price": 2300000,
+        "sqft": 4248,
+        "beds": 4,
+        "baths": 4.5,
+        "soldDate": "10/22/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2019,
+        "dom": 48
+    },
+    {
+        "mls": "RX-10985825",
+        "address": "16888 Matisse Drive",
+        "price": 3650000,
+        "sqft": 7568,
+        "beds": 6,
+        "baths": 7.5,
+        "soldDate": "11/08/2024",
+        "waterfront": "No",
+        "pool": "Yes",
+        "yearBuilt": 2017,
+        "dom": 118
+    },
+    {
+        "mls": "RX-10982926",
+        "address": "9428 Eden Roc Court",
+        "price": 1200000,
+        "sqft": 2460,
+        "beds": 3,
+        "baths": 3.0,
+        "soldDate": "12/02/2024",
+        "waterfront": "Yes",
+        "pool": "Yes",
+        "yearBuilt": 2016,
+        "dom": 163
+    }
+]
+;
+
+        // Parse date and extract year
+        function parseDate(dateStr) {
+            const [month, day, year] = dateStr.split('/');
+            return new Date(year, month - 1, day);
+        }
+
+        function getYear(dateStr) {
+            return parseInt(dateStr.split('/')[2]);
+        }
+
+        // Calculate statistics by year
+        function calculateYearlyStats() {
+            const yearData = {};
+
+            properties.forEach(prop => {
+                const year = getYear(prop.soldDate);
+                if (!yearData[year]) {
+                    yearData[year] = {
+                        sales: [],
+                        count: 0
+                    };
+                }
+                yearData[year].sales.push(prop);
+                yearData[year].count++;
+            });
+
+            const yearlyStats = [];
+            Object.keys(yearData).sort().forEach(year => {
+                const sales = yearData[year].sales;
+                const prices = sales.map(s => s.price);
+                const pricePerSqFt = sales.map(s => s.price / s.sqft);
+
+                const stats = {
+                    year: year,
+                    count: sales.length,
+                    avgPricePerSqFt: pricePerSqFt.reduce((a, b) => a + b, 0) / pricePerSqFt.length,
+                    medianPrice: median(prices),
+                    avgPrice: prices.reduce((a, b) => a + b, 0) / prices.length,
+                    avgSqFt: sales.reduce((sum, s) => sum + s.sqft, 0) / sales.length,
+                    avgDOM: sales.reduce((sum, s) => sum + s.dom, 0) / sales.length
+                };
+
+                yearlyStats.push(stats);
+            });
+
+            // Calculate YoY change
+            for (let i = 1; i < yearlyStats.length; i++) {
+                const current = yearlyStats[i].avgPricePerSqFt;
+                const previous = yearlyStats[i - 1].avgPricePerSqFt;
+                yearlyStats[i].yoyChange = ((current - previous) / previous) * 100;
+            }
+
+            return yearlyStats;
+        }
+
+        function median(arr) {
+            const sorted = arr.slice().sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+        }
+
+        // Initialize dashboard
+        const yearlyStats = calculateYearlyStats();
+
+        const totalSales = properties.length;
+        const avgPricePerSqFt = properties.reduce((sum, p) => sum + (p.price / p.sqft), 0) / totalSales;
+        const avgPrice = properties.reduce((sum, p) => sum + p.price, 0) / totalSales;
+        const avgDOM = properties.reduce((sum, p) => sum + p.dom, 0) / totalSales;
+        const waterfrontCount = properties.filter(p => p.waterfront === "Yes").length;
+
+        document.getElementById('dashboard').innerHTML = `
+            <div class="stat-card">
+                <div class="stat-label">Total Sales</div>
+                <div class="stat-value">${totalSales}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Price/SqFt</div>
+                <div class="stat-value">$${avgPricePerSqFt.toFixed(0)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Sale Price</div>
+                <div class="stat-value">$${(avgPrice / 1000000).toFixed(2)}M</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Days on Market</div>
+                <div class="stat-value">${Math.round(avgDOM)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Waterfront Properties</div>
+                <div class="stat-value">${waterfrontCount}</div>
+            </div>
+        `;
+
+        // Populate yearly stats table
+        let yearlyStatsHTML = '';
+        yearlyStats.forEach(stat => {
+            const yoyClass = stat.yoyChange > 0 ? 'positive' : stat.yoyChange < 0 ? 'negative' : '';
+            const yoySymbol = stat.yoyChange > 0 ? '+' : '';
+            yearlyStatsHTML += `
+                <tr>
+                    <td><strong>${stat.year}</strong></td>
+                    <td>${stat.count}</td>
+                    <td>$${stat.avgPricePerSqFt.toFixed(0)}</td>
+                    <td class="${yoyClass}">${stat.yoyChange ? yoySymbol + stat.yoyChange.toFixed(1) + '%' : 'N/A'}</td>
+                    <td>$${(stat.medianPrice / 1000000).toFixed(2)}M</td>
+                    <td>$${(stat.avgPrice / 1000000).toFixed(2)}M</td>
+                    <td>${stat.avgSqFt.toFixed(0)}</td>
+                    <td>${Math.round(stat.avgDOM)}</td>
+                </tr>
+            `;
+        });
+        document.getElementById('yearlyStats').innerHTML = yearlyStatsHTML;
+
+        // Create charts
+        const years = yearlyStats.map(s => s.year);
+        const pricePerSqFtData = yearlyStats.map(s => s.avgPricePerSqFt);
+        const salesVolumeData = yearlyStats.map(s => s.count);
+        const avgPriceData = yearlyStats.map(s => s.avgPrice);
+
+        // Price per SqFt Chart
+        new Chart(document.getElementById('pricePerSqFtChart'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Average Price per Square Foot',
+                    data: pricePerSqFtData,
+                    borderColor: '#1e3a8a',
+                    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Average Price Per Square Foot (2020-2025)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sales Volume Chart
+        new Chart(document.getElementById('salesVolumeChart'), {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Number of Sales',
+                    data: salesVolumeData,
+                    backgroundColor: '#059669',
+                    borderColor: '#047857',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Volume by Year',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Average Price Chart
+        new Chart(document.getElementById('avgPriceChart'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Average Sale Price',
+                    data: avgPriceData,
+                    borderColor: '#dc2626',
+                    backgroundColor: 'rgba(220, 38, 38, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Average Sale Price Trend',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bedroom Distribution Chart
+        const bedroomCounts = {};
+        properties.forEach(p => {
+            bedroomCounts[p.beds] = (bedroomCounts[p.beds] || 0) + 1;
+        });
+
+        new Chart(document.getElementById('bedroomChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(bedroomCounts).map(b => b + ' BR'),
+                datasets: [{
+                    data: Object.values(bedroomCounts),
+                    backgroundColor: ['#1e3a8a', '#059669', '#dc2626', '#f59e0b', '#8b5cf6']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Property Distribution by Bedrooms',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Days on Market Chart
+        const domRanges = {
+            '0-30': 0,
+            '31-60': 0,
+            '61-90': 0,
+            '91-120': 0,
+            '120+': 0
+        };
+
+        properties.forEach(p => {
+            if (p.dom <= 30) domRanges['0-30']++;
+            else if (p.dom <= 60) domRanges['31-60']++;
+            else if (p.dom <= 90) domRanges['61-90']++;
+            else if (p.dom <= 120) domRanges['91-120']++;
+            else domRanges['120+']++;
+        });
+
+        new Chart(document.getElementById('domChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(domRanges),
+                datasets: [{
+                    label: 'Number of Properties',
+                    data: Object.values(domRanges),
+                    backgroundColor: '#1e3a8a',
+                    borderColor: '#1e40af',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Days on Market Distribution',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Populate year filter
+        const yearFilter = document.getElementById('yearFilter');
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+
+        // Render property table
+        function renderTable(filteredProps = properties) {
+            const tbody = document.getElementById('propertyData');
+            tbody.innerHTML = '';
+
+            filteredProps.forEach(prop => {
+                const row = document.createElement('tr');
+                const pricePerSqFt = (prop.price / prop.sqft).toFixed(0);
+                const features = [];
+                if (prop.waterfront === 'Yes') features.push('<span class="waterfront">Waterfront</span>');
+                if (prop.pool === 'Yes') features.push('<span class="pool">Pool</span>');
+
+                row.innerHTML = `
+                    <td>${prop.mls}</td>
+                    <td>${prop.address}</td>
+                    <td class="price">$${prop.price.toLocaleString()}</td>
+                    <td>${prop.sqft.toLocaleString()}</td>
+                    <td>$${pricePerSqFt}</td>
+                    <td>${prop.beds}</td>
+                    <td>${prop.baths}</td>
+                    <td>${prop.soldDate}</td>
+                    <td>${prop.dom}</td>
+                    <td>${features.join(' ')}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        renderTable();
+
+        // Filtering
+        function applyFilters() {
+            let filtered = properties;
+
+            const year = document.getElementById('yearFilter').value;
+            if (year) {
+                filtered = filtered.filter(p => getYear(p.soldDate) == year);
+            }
+
+            const beds = document.getElementById('bedroomFilter').value;
+            if (beds) {
+                filtered = filtered.filter(p => p.beds == beds || (beds == 6 && p.beds >= 6));
+            }
+
+            const waterfront = document.getElementById('waterfrontFilter').value;
+            if (waterfront) {
+                filtered = filtered.filter(p => p.waterfront === waterfront);
+            }
+
+            const pool = document.getElementById('poolFilter').value;
+            if (pool) {
+                filtered = filtered.filter(p => p.pool === pool);
+            }
+
+            const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+            filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+            renderTable(filtered);
+        }
+
+        document.getElementById('yearFilter').addEventListener('change', applyFilters);
+        document.getElementById('bedroomFilter').addEventListener('change', applyFilters);
+        document.getElementById('waterfrontFilter').addEventListener('change', applyFilters);
+        document.getElementById('poolFilter').addEventListener('change', applyFilters);
+        document.getElementById('minPrice').addEventListener('input', applyFilters);
+        document.getElementById('maxPrice').addEventListener('input', applyFilters);
+
+        // Table sorting
+        function sortTable(colIndex) {
+            const table = document.getElementById('propertyTable');
+            const tbody = document.getElementById('propertyData');
+            const rows = Array.from(tbody.rows);
+
+            const isNumeric = [2, 3, 4, 5, 6, 8].includes(colIndex);
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[colIndex].textContent;
+                let bVal = b.cells[colIndex].textContent;
+
+                if (isNumeric) {
+                    aVal = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+                    bVal = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+                    return bVal - aVal;
+                } else if (colIndex === 7) {
+                    return parseDate(bVal) - parseDate(aVal);
+                } else {
+                    return aVal.localeCompare(bVal);
+                }
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    </script>
+</body>
+</html>

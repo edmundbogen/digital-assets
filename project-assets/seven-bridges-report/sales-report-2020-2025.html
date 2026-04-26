@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven Bridges Sales Report 2020-2025</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f7fafc;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: #718096;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            color: #2d3748;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .chart-container {
+            position: relative;
+            height: 400px;
+            margin-bottom: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: #edf2f7;
+            border-radius: 12px;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-group label {
+            font-size: 0.9em;
+            color: #4a5568;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .filter-group select,
+        .filter-group input {
+            padding: 10px;
+            border: 2px solid #cbd5e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .filter-group select:focus,
+        .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        th {
+            background: #2d3748;
+            color: white;
+            padding: 15px;
+            text-align: left;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.2s;
+        }
+
+        th:hover {
+            background: #1a202c;
+        }
+
+        td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        tr:hover {
+            background: #f7fafc;
+        }
+
+        .price {
+            font-weight: bold;
+            color: #48bb78;
+        }
+
+        .waterfront {
+            background: #4299e1;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .pool {
+            background: #ed8936;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .year-table {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .year-table th {
+            background: #667eea;
+        }
+
+        .positive {
+            color: #48bb78;
+            font-weight: bold;
+        }
+
+        .negative {
+            color: #f56565;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Seven Bridges</h1>
+            <div class="subtitle">Delray Beach, FL - Sales Report 2020-2025</div>
+            <div class="subtitle">222 Closed Sales Analysis</div>
+        </header>
+
+        <div class="dashboard" id="dashboard">
+            <!-- Stats will be inserted here -->
+        </div>
+
+        <div class="content">
+            <div class="section">
+                <h2 class="section-title">Annual Price Per Square Foot Analysis</h2>
+                <table class="year-table">
+                    <thead>
+                        <tr>
+                            <th>Year</th>
+                            <th>Sales Count</th>
+                            <th>Avg Price/SqFt</th>
+                            <th>YoY Change</th>
+                            <th>Median Price</th>
+                            <th>Avg Price</th>
+                            <th>Avg SqFt</th>
+                            <th>Avg DOM</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyStats">
+                        <!-- Yearly stats will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Market Trends</h2>
+                <div class="chart-container">
+                    <canvas id="pricePerSqFtChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="salesVolumeChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <canvas id="avgPriceChart"></canvas>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">Property Analysis</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div class="chart-container">
+                        <canvas id="bedroomChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="domChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <h2 class="section-title">All Properties</h2>
+                <div class="filters">
+                    <div class="filter-group">
+                        <label>Year Sold</label>
+                        <select id="yearFilter">
+                            <option value="">All Years</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Bedrooms</label>
+                        <select id="bedroomFilter">
+                            <option value="">All</option>
+                            <option value="3">3 BR</option>
+                            <option value="4">4 BR</option>
+                            <option value="5">5 BR</option>
+                            <option value="6">6+ BR</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Waterfront</label>
+                        <select id="waterfrontFilter">
+                            <option value="">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Pool</label>
+                        <select id="poolFilter">
+                            <option value="">All</option>
+                            <option value="Yes">Yes</option>
+                            <option value="No">No</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label>Min Price</label>
+                        <input type="number" id="minPrice" placeholder="$0">
+                    </div>
+                    <div class="filter-group">
+                        <label>Max Price</label>
+                        <input type="number" id="maxPrice" placeholder="Any">
+                    </div>
+                </div>
+
+                <table id="propertyTable">
+                    <thead>
+                        <tr>
+                            <th onclick="sortTable(0)">MLS #</th>
+                            <th onclick="sortTable(1)">Address</th>
+                            <th onclick="sortTable(2)">Price</th>
+                            <th onclick="sortTable(3)">SqFt</th>
+                            <th onclick="sortTable(4)">$/SqFt</th>
+                            <th onclick="sortTable(5)">Beds</th>
+                            <th onclick="sortTable(6)">Baths</th>
+                            <th onclick="sortTable(7)">Sold Date</th>
+                            <th onclick="sortTable(8)">DOM</th>
+                            <th onclick="sortTable(9)">Features</th>
+                        </tr>
+                    </thead>
+                    <tbody id="propertyData">
+                        <!-- Property data will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All property data
+        const properties = [
+            // BATCH 1 (1-88)
+            {mls: "RX-10717111", address: "16250 Andalucia Lane", price: 1425000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "11/09/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 41},
+            {mls: "RX-10661890", address: "16266 Andalucia Lane", price: 1295000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "04/01/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 51},
+            {mls: "RX-10736502", address: "16283 Andalucia Lane", price: 1400000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "01/27/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 40},
+            {mls: "RX-10654068", address: "16290 Andalucia Lane", price: 1300000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "03/01/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 32},
+            {mls: "RX-10730775", address: "16914 Bridge Crossing Circle", price: 1395000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "12/30/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 73},
+            {mls: "RX-10804336", address: "16930 Bridge Crossing Circle", price: 1700000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "02/07/2023", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 69},
+            {mls: "RX-10733254", address: "17042 Bridge Crossing Circle", price: 1400000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "01/06/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 81},
+            {mls: "RX-10784152", address: "9090 Croix Court", price: 1650000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "08/16/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 94},
+            {mls: "RX-10868371", address: "9106 Croix Court", price: 1825000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "10/20/2023", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 152},
+            {mls: "RX-10713997", address: "9139 Croix Court", price: 1275000, sqft: 3486, beds: 4, baths: 4, soldDate: "10/27/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 61},
+            {mls: "RX-10712613", address: "9155 Croix Court", price: 1200000, sqft: 3486, beds: 4, baths: 4, soldDate: "10/29/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 41},
+            {mls: "RX-10704343", address: "9173 Delemar Court", price: 1495000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "08/31/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 0},
+            {mls: "RX-10680823", address: "9189 Delemar Court", price: 1525000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "06/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 17},
+            {mls: "RX-10805359", address: "9205 Delemar Court", price: 1750000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "02/27/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 77},
+            {mls: "RX-10747881", address: "9229 Delemar Court", price: 1550000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "03/17/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 56},
+            {mls: "RX-10780890", address: "9237 Delemar Court", price: 1495000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "07/22/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10666349", address: "9253 Delemar Court", price: 1425000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "04/07/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 73},
+            {mls: "RX-10769831", address: "9261 Delemar Court", price: 1575000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "06/10/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 37},
+            {mls: "RX-10670673", address: "9269 Delemar Court", price: 1390000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "04/26/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 34},
+            {mls: "RX-10669614", address: "9285 Delemar Court", price: 1390000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 66},
+            {mls: "RX-10665353", address: "9292 Delemar Court", price: 1250000, sqft: 3486, beds: 4, baths: 4, soldDate: "04/01/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 24},
+            {mls: "RX-10692524", address: "9300 Delemar Court", price: 1240000, sqft: 3486, beds: 4, baths: 4, soldDate: "07/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 14},
+            {mls: "RX-10683069", address: "9308 Delemar Court", price: 1240000, sqft: 3486, beds: 4, baths: 4, soldDate: "06/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 17},
+            {mls: "RX-10810485", address: "16361 Domani Terrace", price: 1385000, sqft: 3486, beds: 4, baths: 4, soldDate: "03/30/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 61},
+            {mls: "RX-10645699", address: "16372 Domani Terrace", price: 1175000, sqft: 3186, beds: 4, baths: 3.5, soldDate: "01/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 68},
+            {mls: "RX-10798699", address: "16380 Domani Terrace", price: 1575000, sqft: 3486, beds: 4, baths: 4, soldDate: "01/06/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 99},
+            {mls: "RX-10720800", address: "16403 Domani Terrace", price: 1500000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "11/19/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 125},
+            {mls: "RX-10768988", address: "16411 Domani Terrace", price: 1575000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "06/10/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 47},
+            {mls: "RX-10670094", address: "16420 Domani Terrace", price: 1185000, sqft: 3186, beds: 4, baths: 3.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 69},
+            {mls: "RX-10768972", address: "16427 Domani Terrace", price: 1550000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "06/08/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10789652", address: "16435 Domani Terrace", price: 1650000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "09/16/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 66},
+            {mls: "RX-10675555", address: "16436 Domani Terrace", price: 1199000, sqft: 3186, beds: 4, baths: 3.5, soldDate: "05/18/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 36},
+            {mls: "RX-10679683", address: "16452 Domani Terrace", price: 1175000, sqft: 3186, beds: 4, baths: 3.5, soldDate: "06/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 26},
+            {mls: "RX-10654154", address: "16459 Domani Terrace", price: 1445000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "02/26/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 51},
+            {mls: "RX-10869623", address: "9284 Eden Roc Court", price: 1850000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "10/20/2023", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 110},
+            {mls: "RX-10758073", address: "9292 Eden Roc Court", price: 1950000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "04/29/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 103},
+            {mls: "RX-10796943", address: "9300 Eden Roc Court", price: 2150000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "12/21/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 93},
+            {mls: "RX-10666430", address: "9308 Eden Roc Court", price: 1700000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/09/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 64},
+            {mls: "RX-10797031", address: "9316 Eden Roc Court", price: 2000000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "12/22/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 71},
+            {mls: "RX-10672867", address: "9332 Eden Roc Court", price: 1625000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/04/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 44},
+            {mls: "RX-10724645", address: "9348 Eden Roc Court", price: 1825000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "12/08/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 113},
+            {mls: "RX-10777043", address: "9356 Eden Roc Court", price: 2000000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "07/08/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 111},
+            {mls: "RX-10689072", address: "9364 Eden Roc Court", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "07/01/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 12},
+            {mls: "RX-10765524", address: "9372 Eden Roc Court", price: 1950000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "05/31/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 35},
+            {mls: "RX-10733361", address: "9380 Eden Roc Court", price: 1725000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "01/12/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 54},
+            {mls: "RX-10768987", address: "9388 Eden Roc Court", price: 1950000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "06/10/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 47},
+            {mls: "RX-10678103", address: "9396 Eden Roc Court", price: 1625000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "06/04/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 59},
+            {mls: "RX-10691434", address: "9404 Eden Roc Court", price: 1650000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "07/14/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 31},
+            {mls: "RX-10655556", address: "9412 Eden Roc Court", price: 1625000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/05/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 65},
+            {mls: "RX-10705773", address: "9420 Eden Roc Court", price: 1750000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "09/13/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 47},
+            {mls: "RX-10788031", address: "16238 Espejo Drive", price: 1750000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "09/07/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 79},
+            {mls: "RX-10722035", address: "16246 Espejo Drive", price: 1675000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "11/29/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 100},
+            {mls: "RX-10684311", address: "16254 Espejo Drive", price: 1650000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "06/25/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 78},
+            {mls: "RX-10779748", address: "16262 Espejo Drive", price: 1775000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "07/22/2022", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 63},
+            {mls: "RX-10671889", address: "16278 Espejo Drive", price: 1600000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "04/30/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 62},
+            {mls: "RX-10669516", address: "16286 Espejo Drive", price: 1550000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "04/19/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 23},
+            {mls: "RX-10668870", address: "16294 Espejo Drive", price: 1550000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 24},
+            {mls: "RX-10748798", address: "16305 Espejo Drive", price: 1875000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/23/2022", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 111},
+            {mls: "RX-10663997", address: "16313 Espejo Drive", price: 1600000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/31/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 63},
+            {mls: "RX-10658866", address: "16321 Espejo Drive", price: 1525000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/15/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 27},
+            {mls: "RX-10715297", address: "16329 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "10/29/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 71},
+            {mls: "RX-10811476", address: "16340 Espejo Drive", price: 1875000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "04/11/2023", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 126},
+            {mls: "RX-10677374", address: "16348 Espejo Drive", price: 1525000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 41},
+            {mls: "RX-10656690", address: "16356 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/08/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 38},
+            {mls: "RX-10741632", address: "16364 Espejo Drive", price: 1700000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "02/18/2022", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 50},
+            {mls: "RX-10709612", address: "16372 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "10/15/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 78},
+            {mls: "RX-10678102", address: "16380 Espejo Drive", price: 1525000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "06/04/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 59},
+            {mls: "RX-10659074", address: "16388 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/12/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 70},
+            {mls: "RX-10675541", address: "16396 Espejo Drive", price: 1550000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "05/20/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 43},
+            {mls: "RX-10713085", address: "16404 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "10/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 50},
+            {mls: "RX-10656691", address: "16412 Espejo Drive", price: 1575000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/09/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 39},
+            {mls: "RX-10657990", address: "16420 Espejo Drive", price: 1550000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "03/12/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 28},
+            {mls: "RX-10674604", address: "16428 Espejo Drive", price: 1525000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "05/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 41},
+            {mls: "RX-10788065", address: "16252 Mira Vista Lane", price: 1750000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "09/07/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 79},
+            {mls: "RX-10686730", address: "16260 Mira Vista Lane", price: 1475000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/30/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 30},
+            {mls: "RX-10743044", address: "16268 Mira Vista Lane", price: 1650000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/23/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 60},
+            {mls: "RX-10744738", address: "16276 Mira Vista Lane", price: 1500000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "02/28/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 48},
+            {mls: "RX-10672869", address: "16284 Mira Vista Lane", price: 1575000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/03/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 51},
+            {mls: "RX-10727638", address: "16292 Mira Vista Lane", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "12/17/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 102},
+            {mls: "RX-10659023", address: "16300 Mira Vista Lane", price: 1625000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/12/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 68},
+            {mls: "RX-10658890", address: "16308 Mira Vista Lane", price: 1525000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/15/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 27},
+            {mls: "RX-10707350", address: "16237 Mira Vista Lane", price: 1475000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "09/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 38},
+            {mls: "RX-10756046", address: "16245 Mira Vista Lane", price: 1650000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/22/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 66},
+            {mls: "RX-10682234", address: "16253 Mira Vista Lane", price: 1425000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "06/22/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 36},
+            {mls: "RX-10677293", address: "16261 Mira Vista Lane", price: 1500000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 42},
+
+            // BATCH 2 (89-145)
+            {mls: "RX-10676270", address: "16269 Mira Vista Lane", price: 1425000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "05/21/2021", waterfront: "No", pool: "Yes", yearBuilt: 2015, dom: 50},
+            {mls: "RX-10675516", address: "16277 Mira Vista Lane", price: 1525000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/18/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 40},
+            {mls: "RX-10706993", address: "16285 Mira Vista Lane", price: 1425000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "09/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 35},
+            {mls: "RX-10742283", address: "16293 Mira Vista Lane", price: 1700000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/25/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10742352", address: "16301 Mira Vista Lane", price: 1625000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/25/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10692438", address: "16309 Mira Vista Lane", price: 1450000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "07/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 22},
+            {mls: "RX-10753073", address: "16317 Mira Vista Lane", price: 1725000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/11/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 82},
+            {mls: "RX-10699854", address: "16325 Mira Vista Lane", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "08/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10693949", address: "16341 Mira Vista Lane", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "07/22/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 43},
+            {mls: "RX-10727644", address: "16349 Mira Vista Lane", price: 1700000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "12/22/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 102},
+            {mls: "RX-10673943", address: "16357 Mira Vista Lane", price: 1575000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/10/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 39},
+            {mls: "RX-10806349", address: "16365 Mira Vista Lane", price: 1925000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/03/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 114},
+            {mls: "RX-10809042", address: "16373 Mira Vista Lane", price: 1800000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/21/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 85},
+            {mls: "RX-10793479", address: "16247 Paseo Del Sur", price: 1800000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "11/09/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 117},
+            {mls: "RX-10741637", address: "16255 Paseo Del Sur", price: 1700000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/18/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 48},
+            {mls: "RX-10752011", address: "16263 Paseo Del Sur", price: 1625000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/07/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 70},
+            {mls: "RX-10806391", address: "16271 Paseo Del Sur", price: 1925000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/09/2023", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 114},
+            {mls: "RX-10776015", address: "16279 Paseo Del Sur", price: 1725000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "07/01/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 98},
+            {mls: "RX-10652598", address: "16287 Paseo Del Sur", price: 1575000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/23/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 33},
+            {mls: "RX-10690078", address: "16295 Paseo Del Sur", price: 1600000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "07/02/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10774133", address: "16303 Paseo Del Sur", price: 1825000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/24/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 93},
+            {mls: "RX-10749813", address: "16310 Paseo Del Sur", price: 1575000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "03/28/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 55},
+            {mls: "RX-10665466", address: "16318 Paseo Del Sur", price: 1375000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "04/02/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 33},
+            {mls: "RX-10653319", address: "16326 Paseo Del Sur", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "02/25/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 41},
+            {mls: "RX-10700893", address: "16334 Paseo Del Sur", price: 1475000, sqft: 4230, beds: 5, baths: 5.5, soldDate: "08/19/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 48},
+            {mls: "RX-10685465", address: "16342 Paseo Del Sur", price: 1475000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 23},
+            {mls: "RX-10679602", address: "16350 Paseo Del Sur", price: 1475000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 38},
+            {mls: "RX-10691375", address: "16358 Paseo Del Sur", price: 1575000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "07/09/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 55},
+            {mls: "RX-10684313", address: "16366 Paseo Del Sur", price: 1475000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/25/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 32},
+            {mls: "RX-10786119", address: "16374 Paseo Del Sur", price: 1800000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "08/26/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 93},
+            {mls: "RX-10669450", address: "16382 Paseo Del Sur", price: 1475000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 39},
+            {mls: "RX-10727653", address: "16390 Paseo Del Sur", price: 1625000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "12/17/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 102},
+            {mls: "RX-10665434", address: "16398 Paseo Del Sur", price: 1500000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "04/01/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 56},
+            {mls: "RX-10678105", address: "16406 Paseo Del Sur", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "06/04/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10748797", address: "16414 Paseo Del Sur", price: 1700000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "03/23/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 79},
+            {mls: "RX-10726224", address: "16422 Paseo Del Sur", price: 1595000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "12/10/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 95},
+            {mls: "RX-10677310", address: "16430 Paseo Del Sur", price: 1550000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10916857", address: "16382 Pantheon Pass", price: 1400000, sqft: 3593, beds: 4, baths: 4, soldDate: "01/10/2024", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 97},
+            {mls: "RX-10881388", address: "16390 Pantheon Pass", price: 1550000, sqft: 3593, beds: 4, baths: 4, soldDate: "12/22/2023", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 118},
+            {mls: "RX-10673970", address: "16422 Pantheon Pass", price: 1300000, sqft: 3593, beds: 4, baths: 4, soldDate: "05/10/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 35},
+            {mls: "RX-10783137", address: "16430 Pantheon Pass", price: 1575000, sqft: 3593, beds: 4, baths: 4, soldDate: "08/10/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 84},
+            {mls: "RX-10812699", address: "16438 Pantheon Pass", price: 1500000, sqft: 3593, beds: 4, baths: 4, soldDate: "04/14/2023", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 66},
+            {mls: "RX-10813014", address: "16446 Pantheon Pass", price: 1435000, sqft: 3593, beds: 4, baths: 4, soldDate: "04/18/2023", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 53},
+            {mls: "RX-10657099", address: "16454 Pantheon Pass", price: 1285000, sqft: 3593, beds: 4, baths: 4, soldDate: "03/05/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 61},
+            {mls: "RX-10667663", address: "16462 Pantheon Pass", price: 1310000, sqft: 3593, beds: 4, baths: 4, soldDate: "04/12/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 41},
+            {mls: "RX-10735366", address: "16470 Pantheon Pass", price: 1475000, sqft: 3593, beds: 4, baths: 4, soldDate: "01/21/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 66},
+            {mls: "RX-10695360", address: "16941 Pavilion Way", price: 1565000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "07/29/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 64},
+            {mls: "RX-11116271", address: "16969 Pavilion Way", price: 1825000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "10/08/2025", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 2},
+            {mls: "RX-10654192", address: "16977 Pavilion Way", price: 1625000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "02/26/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 58},
+            {mls: "RX-10684327", address: "16985 Pavilion Way", price: 1525000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/25/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 39},
+            {mls: "RX-10688039", address: "16993 Pavilion Way", price: 1525000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "07/01/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 26},
+            {mls: "RX-10822574", address: "17001 Pavilion Way", price: 1625000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "05/31/2023", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 68},
+            {mls: "RX-10733214", address: "17025 Pavilion Way", price: 1625000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "01/06/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 91},
+            {mls: "RX-10708350", address: "17033 Pavilion Way", price: 1575000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "09/30/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 89},
+            {mls: "RX-10698950", address: "17041 Pavilion Way", price: 1500000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "08/13/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 37},
+            {mls: "RX-10673976", address: "17049 Pavilion Way", price: 1550000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/10/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 37},
+
+            // BATCH 3 (146-222)
+            {mls: "RX-10759619", address: "17057 Pavilion Way", price: 1900000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/06/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 120},
+            {mls: "RX-10756041", address: "17065 Pavilion Way", price: 1750000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/22/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 66},
+            {mls: "RX-10669455", address: "17073 Pavilion Way", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 37},
+            {mls: "RX-10679571", address: "17081 Pavilion Way", price: 1525000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/14/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 49},
+            {mls: "RX-10792367", address: "17089 Pavilion Way", price: 1850000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "11/04/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 112},
+            {mls: "RX-10670052", address: "17097 Pavilion Way", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10772933", address: "17105 Pavilion Way", price: 1800000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/20/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 90},
+            {mls: "RX-10692437", address: "17113 Pavilion Way", price: 1575000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "07/14/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 48},
+            {mls: "RX-10788030", address: "17121 Pavilion Way", price: 1750000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "09/07/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 83},
+            {mls: "RX-10728732", address: "17129 Pavilion Way", price: 1600000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "12/22/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 104},
+            {mls: "RX-10665390", address: "17137 Pavilion Way", price: 1450000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/01/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 58},
+            {mls: "RX-10674589", address: "17145 Pavilion Way", price: 1425000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/14/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 41},
+            {mls: "RX-10671883", address: "17153 Pavilion Way", price: 1425000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/30/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 53},
+            {mls: "RX-10672875", address: "16882 Strasbourg Lane", price: 1525000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/04/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10670098", address: "16898 Strasbourg Lane", price: 1500000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 60},
+            {mls: "RX-10766488", address: "16922 Strasbourg Lane", price: 1800000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/02/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 101},
+            {mls: "RX-10713088", address: "16930 Strasbourg Lane", price: 1575000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "10/28/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 76},
+            {mls: "RX-10779747", address: "16938 Strasbourg Lane", price: 1775000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "07/22/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 81},
+            {mls: "RX-10715284", address: "16946 Strasbourg Lane", price: 1625000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "10/29/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 94},
+            {mls: "RX-10753070", address: "16954 Strasbourg Lane", price: 1725000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/11/2022", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 82},
+            {mls: "RX-10670054", address: "16962 Strasbourg Lane", price: 1450000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/16/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 56},
+            {mls: "RX-10679624", address: "16970 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/14/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 52},
+            {mls: "RX-10671887", address: "16978 Strasbourg Lane", price: 1450000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/30/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 50},
+            {mls: "RX-10673978", address: "16986 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/10/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 37},
+            {mls: "RX-10684340", address: "16994 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "06/25/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 39},
+            {mls: "RX-10721039", address: "17002 Strasbourg Lane", price: 1600000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "11/23/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 96},
+            {mls: "RX-10675528", address: "17010 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/18/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10673977", address: "17018 Strasbourg Lane", price: 1525000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/10/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 37},
+            {mls: "RX-10672871", address: "17026 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/04/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 42},
+            {mls: "RX-10666347", address: "17034 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "04/07/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 64},
+            {mls: "RX-10816743", address: "17042 Strasbourg Lane", price: 1725000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "05/05/2023", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 84},
+            {mls: "RX-10654190", address: "17050 Strasbourg Lane", price: 1475000, sqft: 4248, beds: 5, baths: 5.5, soldDate: "02/26/2021", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 50},
+            {mls: "RX-10888309", address: "9217 Tropez Lane", price: 1550000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "02/08/2024", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 99},
+            {mls: "RX-10676275", address: "9225 Tropez Lane", price: 1465000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/21/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 68},
+            {mls: "RX-10728730", address: "9233 Tropez Lane", price: 1575000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "12/22/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 104},
+            {mls: "RX-10693946", address: "9241 Tropez Lane", price: 1600000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "07/22/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 90},
+            {mls: "RX-10677373", address: "9249 Tropez Lane", price: 1485000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 51},
+            {mls: "RX-10879560", address: "9257 Tropez Lane", price: 1700000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "12/15/2023", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 126},
+            {mls: "RX-10772935", address: "9265 Tropez Lane", price: 1800000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "06/20/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 109},
+            {mls: "RX-10698940", address: "9273 Tropez Lane", price: 1500000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "08/13/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 50},
+            {mls: "RX-10883374", address: "9281 Tropez Lane", price: 1695000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "01/12/2024", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 129},
+            {mls: "RX-10700892", address: "9289 Tropez Lane", price: 1500000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "08/19/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 63},
+            {mls: "RX-10727637", address: "9297 Tropez Lane", price: 1550000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "12/17/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 102},
+            {mls: "RX-10867349", address: "9305 Tropez Lane", price: 1800000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "10/13/2023", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 145},
+            {mls: "RX-10704346", address: "9313 Tropez Lane", price: 1575000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "08/31/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 90},
+            {mls: "RX-10700903", address: "9321 Tropez Lane", price: 1500000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "08/19/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 63},
+            {mls: "RX-10753074", address: "9329 Tropez Lane", price: 1725000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/11/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 106},
+            {mls: "RX-10751993", address: "9337 Tropez Lane", price: 1625000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/07/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 70},
+            {mls: "RX-10749812", address: "9345 Tropez Lane", price: 1575000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "03/28/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 55},
+            {mls: "RX-10669453", address: "9353 Tropez Lane", price: 1475000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 58},
+            {mls: "RX-10677372", address: "9361 Tropez Lane", price: 1485000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 51},
+            {mls: "RX-10758075", address: "9369 Tropez Lane", price: 1750000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/29/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 103},
+            {mls: "RX-10707352", address: "9377 Tropez Lane", price: 1475000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "09/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 52},
+            {mls: "RX-10754313", address: "9385 Tropez Lane", price: 1700000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/18/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 84},
+            {mls: "RX-10678118", address: "9393 Tropez Lane", price: 1550000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "06/04/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 73},
+            {mls: "RX-10684328", address: "9401 Tropez Lane", price: 1550000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "06/25/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 70},
+            {mls: "RX-10753094", address: "9409 Tropez Lane", price: 1725000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/11/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 106},
+            {mls: "RX-10675521", address: "9417 Tropez Lane", price: 1475000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/18/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 54},
+            {mls: "RX-10679641", address: "9425 Tropez Lane", price: 1475000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "06/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 58},
+            {mls: "RX-10749810", address: "9433 Tropez Lane", price: 1575000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "03/28/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 55},
+            {mls: "RX-10773944", address: "9441 Tropez Lane", price: 1750000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "06/23/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 96},
+            {mls: "RX-10706992", address: "9449 Tropez Lane", price: 1575000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "09/24/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 78},
+            {mls: "RX-10692415", address: "9457 Tropez Lane", price: 1500000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "07/14/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 57},
+            {mls: "RX-10670053", address: "9465 Tropez Lane", price: 1475000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/16/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 58},
+            {mls: "RX-10698951", address: "9473 Tropez Lane", price: 1500000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "08/13/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 50},
+            {mls: "RX-10677377", address: "9481 Tropez Lane", price: 1550000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/28/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 71},
+            {mls: "RX-10756045", address: "9489 Tropez Lane", price: 1650000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "04/22/2022", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 66},
+            {mls: "RX-10672873", address: "9497 Tropez Lane", price: 1525000, sqft: 4190, beds: 5, baths: 4.5, soldDate: "05/04/2021", waterfront: "No", pool: "Yes", yearBuilt: 2018, dom: 50},
+            {mls: "RX-10743043", address: "16874 Valiant Drive", price: 1450000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "02/23/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 60},
+            {mls: "RX-10690084", address: "16882 Valiant Drive", price: 1450000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "07/02/2021", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 59},
+            {mls: "RX-10783105", address: "16890 Valiant Drive", price: 1550000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "08/10/2022", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 84},
+            {mls: "AX-11814690", address: "9368 Eden Roc Court", price: 1850000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "08/29/2025", waterfront: "Yes", pool: "Yes", yearBuilt: 2016, dom: 2},
+            {mls: "RX-11046664", address: "9216 Croix Court", price: 1795000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "07/25/2025", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 306},
+            {mls: "RX-11027669", address: "16922 Bridge Crossing Circle", price: 2150000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "05/01/2025", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 16},
+            {mls: "RX-10983092", address: "16906 Bridge Crossing Circle", price: 2099000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "11/18/2024", waterfront: "No", pool: "Yes", yearBuilt: 2017, dom: 10},
+            {mls: "RX-11012093", address: "16946 Bridge Crossing Circle", price: 2150000, sqft: 3714, beds: 4, baths: 4.5, soldDate: "03/21/2025", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 3},
+            {mls: "RX-10966683", address: "9355 Eden Roc Court", price: 2450000, sqft: 5434, beds: 5, baths: 5.5, soldDate: "09/06/2024", waterfront: "Yes", pool: "Yes", yearBuilt: 2017, dom: 32},
+            {mls: "RX-10962881", address: "16305 Mira Vista Lane", price: 2050000, sqft: 4783, beds: 5, baths: 5.5, soldDate: "08/16/2024", waterfront: "No", pool: "Yes", yearBuilt: 2016, dom: 12}
+        ];
+
+        // Parse date and extract year
+        function parseDate(dateStr) {
+            const [month, day, year] = dateStr.split('/');
+            return new Date(year, month - 1, day);
+        }
+
+        function getYear(dateStr) {
+            return parseInt(dateStr.split('/')[2]);
+        }
+
+        // Calculate statistics by year
+        function calculateYearlyStats() {
+            const yearData = {};
+
+            properties.forEach(prop => {
+                const year = getYear(prop.soldDate);
+                if (!yearData[year]) {
+                    yearData[year] = {
+                        sales: [],
+                        count: 0
+                    };
+                }
+                yearData[year].sales.push(prop);
+                yearData[year].count++;
+            });
+
+            const yearlyStats = [];
+            Object.keys(yearData).sort().forEach(year => {
+                const sales = yearData[year].sales;
+                const prices = sales.map(s => s.price);
+                const pricePerSqFt = sales.map(s => s.price / s.sqft);
+
+                const stats = {
+                    year: year,
+                    count: sales.length,
+                    avgPricePerSqFt: pricePerSqFt.reduce((a, b) => a + b, 0) / pricePerSqFt.length,
+                    medianPrice: median(prices),
+                    avgPrice: prices.reduce((a, b) => a + b, 0) / prices.length,
+                    avgSqFt: sales.reduce((sum, s) => sum + s.sqft, 0) / sales.length,
+                    avgDOM: sales.reduce((sum, s) => sum + s.dom, 0) / sales.length
+                };
+
+                yearlyStats.push(stats);
+            });
+
+            // Calculate YoY change
+            for (let i = 1; i < yearlyStats.length; i++) {
+                const current = yearlyStats[i].avgPricePerSqFt;
+                const previous = yearlyStats[i - 1].avgPricePerSqFt;
+                yearlyStats[i].yoyChange = ((current - previous) / previous) * 100;
+            }
+
+            return yearlyStats;
+        }
+
+        function median(arr) {
+            const sorted = arr.slice().sort((a, b) => a - b);
+            const mid = Math.floor(sorted.length / 2);
+            return sorted.length % 2 ? sorted[mid] : (sorted[mid - 1] + sorted[mid]) / 2;
+        }
+
+        // Initialize dashboard
+        const yearlyStats = calculateYearlyStats();
+
+        const totalSales = properties.length;
+        const avgPricePerSqFt = properties.reduce((sum, p) => sum + (p.price / p.sqft), 0) / totalSales;
+        const avgPrice = properties.reduce((sum, p) => sum + p.price, 0) / totalSales;
+        const avgDOM = properties.reduce((sum, p) => sum + p.dom, 0) / totalSales;
+        const waterfrontCount = properties.filter(p => p.waterfront === "Yes").length;
+
+        document.getElementById('dashboard').innerHTML = `
+            <div class="stat-card">
+                <div class="stat-label">Total Sales</div>
+                <div class="stat-value">${totalSales}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Price/SqFt</div>
+                <div class="stat-value">$${avgPricePerSqFt.toFixed(0)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Sale Price</div>
+                <div class="stat-value">$${(avgPrice / 1000000).toFixed(2)}M</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Avg Days on Market</div>
+                <div class="stat-value">${Math.round(avgDOM)}</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Waterfront Properties</div>
+                <div class="stat-value">${waterfrontCount}</div>
+            </div>
+        `;
+
+        // Populate yearly stats table
+        let yearlyStatsHTML = '';
+        yearlyStats.forEach(stat => {
+            const yoyClass = stat.yoyChange > 0 ? 'positive' : stat.yoyChange < 0 ? 'negative' : '';
+            const yoySymbol = stat.yoyChange > 0 ? '+' : '';
+            yearlyStatsHTML += `
+                <tr>
+                    <td><strong>${stat.year}</strong></td>
+                    <td>${stat.count}</td>
+                    <td>$${stat.avgPricePerSqFt.toFixed(0)}</td>
+                    <td class="${yoyClass}">${stat.yoyChange ? yoySymbol + stat.yoyChange.toFixed(1) + '%' : 'N/A'}</td>
+                    <td>$${(stat.medianPrice / 1000000).toFixed(2)}M</td>
+                    <td>$${(stat.avgPrice / 1000000).toFixed(2)}M</td>
+                    <td>${stat.avgSqFt.toFixed(0)}</td>
+                    <td>${Math.round(stat.avgDOM)}</td>
+                </tr>
+            `;
+        });
+        document.getElementById('yearlyStats').innerHTML = yearlyStatsHTML;
+
+        // Create charts
+        const years = yearlyStats.map(s => s.year);
+        const pricePerSqFtData = yearlyStats.map(s => s.avgPricePerSqFt);
+        const salesVolumeData = yearlyStats.map(s => s.count);
+        const avgPriceData = yearlyStats.map(s => s.avgPrice);
+
+        // Price per SqFt Chart
+        new Chart(document.getElementById('pricePerSqFtChart'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Average Price per Square Foot',
+                    data: pricePerSqFtData,
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Average Price Per Square Foot (2020-2025)',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + value;
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Sales Volume Chart
+        new Chart(document.getElementById('salesVolumeChart'), {
+            type: 'bar',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Number of Sales',
+                    data: salesVolumeData,
+                    backgroundColor: '#48bb78',
+                    borderColor: '#38a169',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Sales Volume by Year',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Average Price Chart
+        new Chart(document.getElementById('avgPriceChart'), {
+            type: 'line',
+            data: {
+                labels: years,
+                datasets: [{
+                    label: 'Average Sale Price',
+                    data: avgPriceData,
+                    borderColor: '#ed8936',
+                    backgroundColor: 'rgba(237, 137, 54, 0.1)',
+                    borderWidth: 3,
+                    fill: true,
+                    tension: 0.4
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Average Sale Price Trend',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: false,
+                        ticks: {
+                            callback: function(value) {
+                                return '$' + (value / 1000000).toFixed(1) + 'M';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        // Bedroom Distribution Chart
+        const bedroomCounts = {};
+        properties.forEach(p => {
+            bedroomCounts[p.beds] = (bedroomCounts[p.beds] || 0) + 1;
+        });
+
+        new Chart(document.getElementById('bedroomChart'), {
+            type: 'doughnut',
+            data: {
+                labels: Object.keys(bedroomCounts).map(b => b + ' BR'),
+                datasets: [{
+                    data: Object.values(bedroomCounts),
+                    backgroundColor: ['#667eea', '#48bb78', '#ed8936', '#f56565', '#9f7aea']
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'right'
+                    },
+                    title: {
+                        display: true,
+                        text: 'Property Distribution by Bedrooms',
+                        font: { size: 16 }
+                    }
+                }
+            }
+        });
+
+        // Days on Market Chart
+        const domRanges = {
+            '0-30': 0,
+            '31-60': 0,
+            '61-90': 0,
+            '91-120': 0,
+            '120+': 0
+        };
+
+        properties.forEach(p => {
+            if (p.dom <= 30) domRanges['0-30']++;
+            else if (p.dom <= 60) domRanges['31-60']++;
+            else if (p.dom <= 90) domRanges['61-90']++;
+            else if (p.dom <= 120) domRanges['91-120']++;
+            else domRanges['120+']++;
+        });
+
+        new Chart(document.getElementById('domChart'), {
+            type: 'bar',
+            data: {
+                labels: Object.keys(domRanges),
+                datasets: [{
+                    label: 'Number of Properties',
+                    data: Object.values(domRanges),
+                    backgroundColor: '#4299e1',
+                    borderColor: '#3182ce',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+                    title: {
+                        display: true,
+                        text: 'Days on Market Distribution',
+                        font: { size: 16 }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Populate year filter
+        const yearFilter = document.getElementById('yearFilter');
+        years.forEach(year => {
+            const option = document.createElement('option');
+            option.value = year;
+            option.textContent = year;
+            yearFilter.appendChild(option);
+        });
+
+        // Render property table
+        function renderTable(filteredProps = properties) {
+            const tbody = document.getElementById('propertyData');
+            tbody.innerHTML = '';
+
+            filteredProps.forEach(prop => {
+                const row = document.createElement('tr');
+                const pricePerSqFt = (prop.price / prop.sqft).toFixed(0);
+                const features = [];
+                if (prop.waterfront === 'Yes') features.push('<span class="waterfront">Waterfront</span>');
+                if (prop.pool === 'Yes') features.push('<span class="pool">Pool</span>');
+
+                row.innerHTML = `
+                    <td>${prop.mls}</td>
+                    <td>${prop.address}</td>
+                    <td class="price">$${prop.price.toLocaleString()}</td>
+                    <td>${prop.sqft.toLocaleString()}</td>
+                    <td>$${pricePerSqFt}</td>
+                    <td>${prop.beds}</td>
+                    <td>${prop.baths}</td>
+                    <td>${prop.soldDate}</td>
+                    <td>${prop.dom}</td>
+                    <td>${features.join(' ')}</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        renderTable();
+
+        // Filtering
+        function applyFilters() {
+            let filtered = properties;
+
+            const year = document.getElementById('yearFilter').value;
+            if (year) {
+                filtered = filtered.filter(p => getYear(p.soldDate) == year);
+            }
+
+            const beds = document.getElementById('bedroomFilter').value;
+            if (beds) {
+                filtered = filtered.filter(p => p.beds == beds || (beds == 6 && p.beds >= 6));
+            }
+
+            const waterfront = document.getElementById('waterfrontFilter').value;
+            if (waterfront) {
+                filtered = filtered.filter(p => p.waterfront === waterfront);
+            }
+
+            const pool = document.getElementById('poolFilter').value;
+            if (pool) {
+                filtered = filtered.filter(p => p.pool === pool);
+            }
+
+            const minPrice = parseInt(document.getElementById('minPrice').value) || 0;
+            const maxPrice = parseInt(document.getElementById('maxPrice').value) || Infinity;
+            filtered = filtered.filter(p => p.price >= minPrice && p.price <= maxPrice);
+
+            renderTable(filtered);
+        }
+
+        document.getElementById('yearFilter').addEventListener('change', applyFilters);
+        document.getElementById('bedroomFilter').addEventListener('change', applyFilters);
+        document.getElementById('waterfrontFilter').addEventListener('change', applyFilters);
+        document.getElementById('poolFilter').addEventListener('change', applyFilters);
+        document.getElementById('minPrice').addEventListener('input', applyFilters);
+        document.getElementById('maxPrice').addEventListener('input', applyFilters);
+
+        // Table sorting
+        function sortTable(colIndex) {
+            const table = document.getElementById('propertyTable');
+            const tbody = document.getElementById('propertyData');
+            const rows = Array.from(tbody.rows);
+
+            const isNumeric = [2, 3, 4, 5, 6, 8].includes(colIndex);
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[colIndex].textContent;
+                let bVal = b.cells[colIndex].textContent;
+
+                if (isNumeric) {
+                    aVal = parseFloat(aVal.replace(/[^0-9.-]/g, ''));
+                    bVal = parseFloat(bVal.replace(/[^0-9.-]/g, ''));
+                    return bVal - aVal;
+                } else if (colIndex === 7) {
+                    return parseDate(bVal) - parseDate(aVal);
+                } else {
+                    return aVal.localeCompare(bVal);
+                }
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+    </script>
+</body>
+</html>

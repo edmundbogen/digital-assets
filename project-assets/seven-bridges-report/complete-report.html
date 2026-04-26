@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seven Bridges Market Analysis - Complete 5 Year Report (222 Sales)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 40px;
+            background: #f8f9fa;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat-card h3 {
+            color: #666;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #2a5298;
+            margin-bottom: 5px;
+        }
+
+        .stat-card .subtext {
+            color: #888;
+            font-size: 0.9em;
+        }
+
+        .charts-section {
+            padding: 40px;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .chart-container h2 {
+            margin-bottom: 20px;
+            color: #2a5298;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        canvas {
+            max-height: 400px;
+        }
+
+        .filters {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .filter-group label {
+            font-size: 0.9em;
+            color: #666;
+            font-weight: 600;
+        }
+
+        .filter-group select, .filter-group input {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+
+        .filter-group select:focus, .filter-group input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .table-container {
+            padding: 40px;
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        thead {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+
+        th {
+            font-weight: 600;
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+        }
+
+        th:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        th::after {
+            content: ' ↕';
+            opacity: 0.5;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background 0.2s;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+
+        tbody tr:nth-child(even):hover {
+            background: #f0f2f5;
+        }
+
+        .price {
+            color: #28a745;
+            font-weight: 600;
+        }
+
+        .waterfront {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #17a2b8;
+            color: white;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        .pool {
+            display: inline-block;
+            padding: 3px 8px;
+            background: #007bff;
+            color: white;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+
+        footer {
+            background: #2a5298;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .year-breakdown {
+            background: white;
+            padding: 30px;
+            margin: 0 40px 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .year-breakdown h2 {
+            color: #2a5298;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .year-breakdown table {
+            box-shadow: none;
+        }
+
+        .year-breakdown thead {
+            background: #667eea;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Seven Bridges Market Analysis</h1>
+            <p>Complete 5-Year Sales Report | 222 Closed Sales | Delray Beach, FL</p>
+        </header>
+
+        <div class="stats-grid" id="statsGrid">
+            <!-- Stats will be populated by JavaScript -->
+        </div>
+
+        <div class="year-breakdown">
+            <h2>Annual Price Per Square Foot Analysis</h2>
+            <table id="yearTable">
+                <thead>
+                    <tr>
+                        <th>Year</th>
+                        <th>Sales Count</th>
+                        <th>Avg Price/SqFt</th>
+                        <th>Avg Sale Price</th>
+                        <th>Avg Size (SqFt)</th>
+                        <th>Total Volume</th>
+                    </tr>
+                </thead>
+                <tbody id="yearTableBody">
+                </tbody>
+            </table>
+        </div>
+
+        <div class="charts-section">
+            <div class="chart-container">
+                <h2>📊 Average Price Per Square Foot by Year Built</h2>
+                <canvas id="priceSqftChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>📈 Sales Volume by Year Built</h2>
+                <canvas id="salesVolumeChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>💰 Average Sale Price Trends</h2>
+                <canvas id="avgPriceChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>🏠 Property Size Distribution</h2>
+                <canvas id="sizeDistChart"></canvas>
+            </div>
+
+            <div class="chart-container">
+                <h2>📅 Days on Market Analysis</h2>
+                <canvas id="domChart"></canvas>
+            </div>
+        </div>
+
+        <div class="filters">
+            <div class="filter-group">
+                <label>Filter by Year Built</label>
+                <select id="yearFilter">
+                    <option value="all">All Years</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Bedrooms</label>
+                <select id="bedroomFilter">
+                    <option value="all">All</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Waterfront</label>
+                <select id="waterfrontFilter">
+                    <option value="all">All</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Pool</label>
+                <select id="poolFilter">
+                    <option value="all">All</option>
+                    <option value="yes">Yes</option>
+                    <option value="no">No</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <label>Min Price</label>
+                <input type="number" id="minPrice" placeholder="$0">
+            </div>
+            <div class="filter-group">
+                <label>Max Price</label>
+                <input type="number" id="maxPrice" placeholder="Any">
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2 style="margin-bottom: 20px; color: #2a5298;">All Property Sales (222 Total)</h2>
+            <table id="salesTable">
+                <thead>
+                    <tr>
+                        <th onclick="sortTable(0)">Address</th>
+                        <th onclick="sortTable(1)">Price</th>
+                        <th onclick="sortTable(2)">$/SqFt</th>
+                        <th onclick="sortTable(3)">SqFt</th>
+                        <th onclick="sortTable(4)">Beds</th>
+                        <th onclick="sortTable(5)">Baths</th>
+                        <th onclick="sortTable(6)">Year Built</th>
+                        <th onclick="sortTable(7)">DOM</th>
+                        <th onclick="sortTable(8)">Features</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <!-- Table will be populated by JavaScript -->
+                </tbody>
+            </table>
+        </div>
+
+        <footer>
+            <p>Seven Bridges Complete Market Report | 222 Closed Sales | Data Through October 2025 | Generated for Market Analysis</p>
+        </footer>
+    </div>
+
+    <script>
+        // Complete dataset - All 222 sales
+        const salesData = [
+            {address: "16533 Fleur De Lis Way", price: 2312500, sqft: 4798, beds: 4, baths: 6, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 237},
+            {address: "16388 Cabernet Drive", price: 1600000, sqft: 4735, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 2},
+            {address: "9338 Eden Roc Court", price: 1070000, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 5},
+            {address: "9626 Labelle Court", price: 3200000, sqft: 7568, beds: 6, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 9},
+            {address: "16298 Pantheon Pass", price: 2400000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 17},
+            {address: "9512 Eden Roc Court", price: 1100000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 123},
+            {address: "9349 Eden Roc Court", price: 1585000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 36},
+            {address: "16143 Pantheon Pass", price: 1520000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 27},
+            {address: "16716 Strasbourg Lane", price: 2750000, sqft: 5529, beds: 6, baths: 8, yearBuilt: 2016, waterfront: "No", pool: "Yes", dom: 10},
+            {address: "9838 Vitrail Lane", price: 2200000, sqft: 5188, beds: 5, baths: 7, yearBuilt: 2016, waterfront: "No", pool: "Yes", dom: 86},
+            {address: "9589 Eden Roc Court", price: 1858000, sqft: 4331, beds: 6, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 78},
+            {address: "16256 Pantheon Pass", price: 830000, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2017, waterfront: "No", pool: "No", dom: 212},
+            {address: "16840 Matisse Drive", price: 2485000, sqft: 7506, beds: 6, baths: 8, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 70},
+            {address: "9729 Montpellier Drive", price: 1389000, sqft: 5075, beds: 5, baths: 7, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 120},
+            {address: "9742 Rennes Lane", price: 1550000, sqft: 3968, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 183},
+            {address: "9059 Moriset Court", price: 1135000, sqft: 3987, beds: 5, baths: 5, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 144},
+            {address: "9535 Eden Roc Court", price: 865000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 228},
+            {address: "16352 Cabernet Drive", price: 1350000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 70},
+            {address: "9481 Eden Roc Court", price: 960000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 62},
+            {address: "9518 Eden Roc Court", price: 830000, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 67},
+            {address: "9030 Moriset Court", price: 1265000, sqft: 5015, beds: 5, baths: 7, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 9},
+            {address: "9817 Montpellier Drive", price: 1875000, sqft: 5529, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 53},
+            {address: "9095 Moriset Court", price: 920000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 57},
+            {address: "9901 Bozzano Drive", price: 1133000, sqft: 3042, beds: 4, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "No", dom: 89},
+            {address: "16929 Pierre Circle", price: 1175000, sqft: 3396, beds: 3, baths: 4, yearBuilt: 2015, waterfront: "No", pool: "No", dom: 95},
+            {address: "16912 Pierre Circle", price: 1610000, sqft: 4440, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 27},
+            {address: "16722 Cannes Street", price: 2950000, sqft: 5892, beds: 8, baths: 10, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 87},
+            {address: "16783 Pavilion Way", price: 1325000, sqft: 3249, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 151},
+            {address: "9475 Eden Roc Court", price: 1275000, sqft: 4331, beds: 5, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 24},
+            {address: "16334 Cabernet Drive", price: 810000, sqft: 2609, beds: 4, baths: 3, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 74},
+            {address: "16581 Fleur De Lis Way", price: 3050000, sqft: 7875, beds: 6, baths: 9, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 20},
+            {address: "16832 Pierre Circle", price: 1645000, sqft: 4440, beds: 4, baths: 6, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 141},
+            {address: "16950 Pavilion Way", price: 1490000, sqft: 5188, beds: 5, baths: 7, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 2},
+            {address: "16715 Cannes Street", price: 2050000, sqft: 5216, beds: 5, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 10},
+            {address: "9560 Balenciaga Court", price: 3075000, sqft: 7875, beds: 6, baths: 9, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 46},
+            {address: "16388 Cabernet Drive", price: 1279000, sqft: 4735, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 31},
+            {address: "9338 Eden Roc Court", price: 842930, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 12},
+            {address: "9312 Tropez Lane", price: 1725000, sqft: 5216, beds: 4, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 101},
+            {address: "9325 Eden Roc Court", price: 1179900, sqft: 4331, beds: 6, baths: 6, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 38},
+            {address: "9529 Eden Roc Court", price: 1075000, sqft: 4331, beds: 6, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 29},
+            {address: "16364 Cabernet Drive", price: 1200000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 62},
+            {address: "16832 Matisse Drive", price: 2050000, sqft: 4589, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 47},
+            {address: "9029 Moriset Court", price: 1100000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 7},
+            {address: "16885 Pavilion Way", price: 1475000, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 58},
+            {address: "9575 Moritz Way", price: 2050000, sqft: 4783, beds: 5, baths: 7, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 45},
+            {address: "9807 Vitrail Lane", price: 1398000, sqft: 4820, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 13},
+            {address: "9794 Bozzano Drive", price: 1325000, sqft: 3987, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 7},
+            {address: "16896 Pavilion Way", price: 1500000, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 2},
+            {address: "9809 Montpellier Drive", price: 2210000, sqft: 5892, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 78},
+            {address: "16855 Pavilion Way", price: 1529900, sqft: 3937, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 9},
+            {address: "9818 Bozzano Drive", price: 1400000, sqft: 3057, beds: 3, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 24},
+            {address: "9717 Rennes Lane", price: 2225000, sqft: 5892, beds: 5, baths: 9, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 38},
+            {address: "16897 Pierre Circle", price: 1300000, sqft: 4440, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "No", pool: "No", dom: 6},
+            {address: "16623 Fleur De Lis Way", price: 1800000, sqft: 4973, beds: 4, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 0},
+            {address: "9562 Labelle Court", price: 2800000, sqft: 7568, beds: 6, baths: 8, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 50},
+            {address: "9344 Eden Roc Court", price: 1225000, sqft: 3593, beds: 5, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9289 Tropez Lane", price: 1900000, sqft: 5216, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 33},
+            {address: "9746 Bozzano Drive", price: 1412500, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 41},
+            {address: "16557 Fleur De Lis Way", price: 2162500, sqft: 4651, beds: 3, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 12},
+            {address: "16376 Cabernet Drive", price: 1565000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "16379 Corvino Court", price: 1599000, sqft: 5233, beds: 5, baths: 8, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 5},
+            {address: "9071 Moriset Court", price: 1600000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "9482 Eden Roc Court", price: 1265000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 17},
+            {address: "16726 Picardy Way", price: 1300000, sqft: 4331, beds: 5, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 7},
+            {address: "16305 Pantheon Pass", price: 1750000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9747 Vitrail Lane", price: 2200000, sqft: 5233, beds: 5, baths: 8, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 8},
+            {address: "9066 Moriset Court", price: 1430000, sqft: 3249, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9783 Vitrail Lane", price: 1550000, sqft: 3057, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 34},
+            {address: "9517 Eden Roc Court", price: 1550000, sqft: 4331, beds: 5, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 1},
+            {address: "9391 Eden Roc Court", price: 1450000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2016, waterfront: "No", pool: "Yes", dom: 2},
+            {address: "16394 Pantheon Pass", price: 1299000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 7},
+            {address: "16226 Cabernet Drive", price: 1395000, sqft: 3593, beds: 4, baths: 5, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 9},
+            {address: "9583 Eden Roc Court", price: 1250000, sqft: 3537, beds: 5, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "16951 Pavilion Way", price: 2250000, sqft: 5233, beds: 5, baths: 7, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 50},
+            {address: "9786 Montpellier Drive", price: 2875000, sqft: 5529, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 40},
+            {address: "16926 Pavilion Way", price: 1850000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 87},
+            {address: "9397 Eden Roc Court", price: 1250000, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 73},
+            {address: "9736 Vitrail Lane", price: 1700000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 42},
+            {address: "16591 Germaine Drive", price: 1625000, sqft: 4022, beds: 5, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 4},
+            {address: "9800 Bozzano Drive", price: 1515000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "No", dom: 5},
+            {address: "16382 Cabernet Drive", price: 1260000, sqft: 3277, beds: 3, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 10},
+            {address: "9599 Moritz Way", price: 2815000, sqft: 4820, beds: 4, baths: 6, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 136},
+            {address: "16796 Strasbourg Lane", price: 2400000, sqft: 5216, beds: 4, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 44},
+            {address: "9770 Bozzano Drive", price: 1825000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 34},
+            {address: "9949 Bozzano Drive", price: 1415000, sqft: 3057, beds: 3, baths: 4, yearBuilt: 2018, waterfront: "No", pool: "No", dom: 31},
+            {address: "9524 Eden Roc Court", price: 1525000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "9795 Vitrail Lane", price: 1600000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 0},
+            {address: "9759 Vitrail Lane", price: 1599000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 1},
+            {address: "16833 Pierre Circle", price: 1625000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 15},
+            {address: "16359 Pantheon Pass", price: 1370000, sqft: 3277, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9641 Labelle Court", price: 2700000, sqft: 4658, beds: 3, baths: 6, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "16226 Cabernet Drive", price: 1590000, sqft: 3593, beds: 4, baths: 5, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 0},
+            {address: "16645 Germaine Drive", price: 1670000, sqft: 3537, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 22},
+            {address: "9730 Rennes Lane", price: 2825000, sqft: 3968, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 5},
+            {address: "16786 Couture Court", price: 3100000, sqft: 5529, beds: 5, baths: 7, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9610 Labelle Court", price: 3763000, sqft: 7568, beds: 6, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 4},
+            {address: "16346 Cabernet Drive", price: 2600000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 11},
+            {address: "16873 Pierre Circle", price: 2750000, sqft: 5529, beds: 5, baths: 7, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 57},
+            {address: "16130 Pantheon Pass", price: 2090000, sqft: 4331, beds: 6, baths: 5, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 76},
+            {address: "9757 Bozzano Drive", price: 2460000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 7},
+            {address: "16596 Germaine Drive", price: 2300000, sqft: 4331, beds: 6, baths: 6, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 2},
+            {address: "9505 Eden Roc Court", price: 1398000, sqft: 2609, beds: 4, baths: 3, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 6},
+            {address: "16751 Picardy Way", price: 2425000, sqft: 4820, beds: 5, baths: 6, yearBuilt: 2020, waterfront: "Yes", pool: "No", dom: 19},
+            {address: "16686 Picardy Way", price: 2500000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 17},
+            {address: "9535 Balenciaga Court", price: 3200000, sqft: 7869, beds: 6, baths: 9, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 268},
+            {address: "9488 Eden Roc Court", price: 2000000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 14},
+            {address: "9724 Rennes Lane", price: 2050000, sqft: 3968, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 18},
+            {address: "16388 Pantheon Pass", price: 1850000, sqft: 3593, beds: 5, baths: 5, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 2},
+            {address: "9776 Bozzano Drive", price: 1699000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 6},
+            {address: "9583 Moritz Way", price: 3325000, sqft: 7568, beds: 6, baths: 9, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 201},
+            {address: "9913 Bozzano Drive", price: 2200000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 54},
+            {address: "9301 Eden Roc Court", price: 1175000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 50},
+            {address: "16750 Picardy Way", price: 1500000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2020, waterfront: "Yes", pool: "No", dom: 22},
+            {address: "9814 Vitrail Lane", price: 1800000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 73},
+            {address: "9820 Vitrail Lane", price: 1725000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 50},
+            {address: "16239 Cabernet Drive", price: 1400000, sqft: 3277, beds: 4, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 52},
+            {address: "16702 Picardy Way", price: 2650000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 69},
+            {address: "16143 Pantheon Pass", price: 1320000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 4},
+            {address: "9825 Montpellier Drive", price: 2000000, sqft: 3968, beds: 5, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 24},
+            {address: "9795 Rennes Lane", price: 2825000, sqft: 5892, beds: 5, baths: 9, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 14},
+            {address: "16929 Pierre Circle", price: 1650000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2015, waterfront: "No", pool: "No", dom: 12},
+            {address: "16256 Cabernet Drive", price: 1115000, sqft: 2450, beds: 3, baths: 3, yearBuilt: 2019, waterfront: "No", pool: "No", dom: 106},
+            {address: "16137 Pantheon Pass", price: 1080000, sqft: 2609, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "No", pool: "No", dom: 84},
+            {address: "16825 Matisse Drive", price: 4285000, sqft: 8071, beds: 6, baths: 10, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 53},
+            {address: "9736 Rennes Lane", price: 2650000, sqft: 5892, beds: 5, baths: 9, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 22},
+            {address: "9748 Rennes Lane", price: 2900000, sqft: 5892, beds: 7, baths: 8, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 2},
+            {address: "9071 Moriset Court", price: 1750000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 13},
+            {address: "9559 Balenciaga Court", price: 4599000, sqft: 7875, beds: 6, baths: 9, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 8},
+            {address: "16921 Pavilion Way", price: 1800000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "No", pool: "Yes", dom: 45},
+            {address: "16857 Pierre Circle", price: 2675000, sqft: 5263, beds: 6, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 29},
+            {address: "16274 Pantheon Pass", price: 1450000, sqft: 3277, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 6},
+            {address: "9296 Tropez Lane", price: 2600000, sqft: 5520, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 10},
+            {address: "16328 Cabernet Drive", price: 1215000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 8},
+            {address: "16865 Pierre Circle", price: 2800000, sqft: 5225, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 56},
+            {address: "9718 Rennes Lane", price: 2675000, sqft: 3968, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "16335 Cabernet Drive", price: 1300000, sqft: 3537, beds: 5, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 45},
+            {address: "9030 Moriset Court", price: 1925000, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 75},
+            {address: "16142 Pantheon Pass", price: 1995000, sqft: 4387, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 41},
+            {address: "16750 Picardy Way", price: 1550000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2020, waterfront: "Yes", pool: "No", dom: 8},
+            {address: "16566 Fleur De Lis Way", price: 3950000, sqft: 7568, beds: 6, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 42},
+            {address: "16879 Pavilion Way", price: 2095000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 7},
+            {address: "9536 Eden Roc Court", price: 1225000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 20},
+            {address: "9765 Rennes Lane", price: 1775000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 8},
+            {address: "16900 Strasbourg Lane", price: 3300000, sqft: 6155, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 97},
+            {address: "9889 Bozzano Drive", price: 1712000, sqft: 3987, beds: 5, baths: 5, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 99},
+            {address: "16382 Pantheon Pass", price: 1400000, sqft: 3593, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 66},
+            {address: "16262 Pantheon Pass", price: 1590016, sqft: 3277, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 10},
+            {address: "16184 Pantheon Pass", price: 1535000, sqft: 3277, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 48},
+            {address: "16812 Strasbourg Lane", price: 2999999, sqft: 6171, beds: 5, baths: 7, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 6},
+            {address: "16197 Cabernet Drive", price: 2350000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 57},
+            {address: "9578 Labelle Court", price: 4650000, sqft: 7869, beds: 6, baths: 9, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 204},
+            {address: "16825 Pavilion Way", price: 2350000, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9711 Rennes Lane", price: 3070500, sqft: 6171, beds: 7, baths: 7, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 23},
+            {address: "16695 Picardy Way", price: 2325000, sqft: 4248, beds: 5, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 170},
+            {address: "9847 Bozzano Drive", price: 1950000, sqft: 4248, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 75},
+            {address: "9742 Vitrail Lane", price: 2400000, sqft: 4248, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 101},
+            {address: "9777 Vitrail Lane", price: 2100000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 129},
+            {address: "16149 Pantheon Pass", price: 1920000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 86},
+            {address: "16238 Cabernet Drive", price: 2100000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "No", pool: "No", dom: 11},
+            {address: "16573 Fleur De Lis Way", price: 3150000, sqft: 4814, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 69},
+            {address: "16807 Pavilion Way", price: 1998000, sqft: 3258, beds: 3, baths: 4, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 37},
+            {address: "16298 Pantheon Pass", price: 2050000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 169},
+            {address: "16359 Pantheon Pass", price: 1610000, sqft: 3277, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 1},
+            {address: "16322 Cabernet Drive", price: 1625000, sqft: 3277, beds: 3, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 26},
+            {address: "16756 Strasbourg Lane", price: 2125000, sqft: 3968, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 30},
+            {address: "16598 Fleur De Lis Way", price: 3825000, sqft: 7757, beds: 6, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 17},
+            {address: "16173 Pantheon Pass", price: 1350000, sqft: 3378, beds: 5, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "No", dom: 0},
+            {address: "16896 Pavilion Way", price: 2468500, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 73},
+            {address: "16348 Corvino Court", price: 2100000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 75},
+            {address: "9577 Eden Roc Court", price: 1375000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "16710 Picardy Way", price: 1800000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 104},
+            {address: "9428 Eden Roc Court", price: 1200000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 163},
+            {address: "16888 Matisse Drive", price: 3650000, sqft: 7568, beds: 6, baths: 8, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 118},
+            {address: "9729 Vitrail Lane", price: 2275000, sqft: 5233, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 87},
+            {address: "16686 Picardy Way", price: 2425000, sqft: 3932, beds: 5, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 23},
+            {address: "16735 Picardy Way", price: 2100000, sqft: 3987, beds: 5, baths: 6, yearBuilt: 2020, waterfront: "Yes", pool: "Yes", dom: 141},
+            {address: "16148 Pantheon Pass", price: 2200000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 6},
+            {address: "9397 Eden Roc Court", price: 1275000, sqft: 2460, beds: 4, baths: 3, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 103},
+            {address: "16732 Strasbourg Lane", price: 2000000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 15},
+            {address: "9865 Bozzano Drive", price: 1960000, sqft: 4248, beds: 3, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9813 Vitrail Lane", price: 2300000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 48},
+            {address: "9542 Eden Roc Court", price: 1600000, sqft: 4331, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "No", pool: "Yes", dom: 159},
+            {address: "16340 Cabernet Drive", price: 1545000, sqft: 3277, beds: 4, baths: 4, yearBuilt: 2019, waterfront: "Yes", pool: "No", dom: 80},
+            {address: "16864 Matisse Drive", price: 3085000, sqft: 4973, beds: 4, baths: 6, yearBuilt: 2019, waterfront: "No", pool: "Yes", dom: 10},
+            {address: "16825 Matisse Drive", price: 4680000, sqft: 8071, beds: 6, baths: 10, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 152},
+            {address: "9814 Vitrail Lane", price: 2100000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 92},
+            {address: "9736 Vitrail Lane", price: 1825000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "No", dom: 89},
+            {address: "16856 Pierre Circle", price: 2900000, sqft: 5529, beds: 5, baths: 7, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 0},
+            {address: "9807 Vitrail Lane", price: 2370000, sqft: 4820, beds: 5, baths: 6, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 4},
+            {address: "16317 Pantheon Pass", price: 1592000, sqft: 3378, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 87},
+            {address: "16328 Cabernet Drive", price: 1500000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 4},
+            {address: "9578 Eden Roc Court", price: 1300000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 97},
+            {address: "9313 Tropez Lane", price: 2200000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 49},
+            {address: "9831 Vitrail Lane", price: 2225000, sqft: 5233, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 109},
+            {address: "16804 Couture Court", price: 3850000, sqft: 6171, beds: 5, baths: 7, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 25},
+            {address: "16215 Cabernet Drive", price: 1550000, sqft: 4331, beds: 5, baths: 5, yearBuilt: 2018, waterfront: "No", pool: "No", dom: 42},
+            {address: "9748 Rennes Lane", price: 2800000, sqft: 5892, beds: 7, baths: 8, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 159},
+            {address: "9782 Bozzano Drive", price: 1975000, sqft: 3987, beds: 5, baths: 5, yearBuilt: 2019, waterfront: "Yes", pool: "Yes", dom: 54},
+            {address: "9042 Moriset Court", price: 2100000, sqft: 5188, beds: 5, baths: 8, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 36},
+            {address: "9561 Labelle Court", price: 2975000, sqft: 4694, beds: 4, baths: 5, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 19},
+            {address: "16836 Strasbourg Lane", price: 2500000, sqft: 5892, beds: 5, baths: 8, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 98},
+            {address: "9790 Rennes Lane", price: 2670000, sqft: 5529, beds: 4, baths: 7, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 81},
+            {address: "9595 Eden Roc Court", price: 1987500, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 36},
+            {address: "16317 Cabernet Drive", price: 1917000, sqft: 4783, beds: 5, baths: 6, yearBuilt: 2018, waterfront: "Yes", pool: "No", dom: 25},
+            {address: "16963 Pavilion Way", price: 1500000, sqft: 3057, beds: 4, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 17},
+            {address: "9288 Tropez Lane", price: 2000000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 46},
+            {address: "9385 Eden Roc Court", price: 1700000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "No", pool: "Yes", dom: 26},
+            {address: "16969 Pavilion Way", price: 1825000, sqft: 4248, beds: 5, baths: 6, yearBuilt: 2015, waterfront: "No", pool: "No", dom: 10},
+            {address: "9850 Rennes Lane", price: 1670000, sqft: 5892, beds: 5, baths: 9, yearBuilt: 2018, waterfront: "Yes", pool: "Yes", dom: 190},
+            {address: "9320 Tropez Lane", price: 1525000, sqft: 5216, beds: 4, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "No", dom: 85},
+            {address: "9766 Vitrail Lane", price: 1340000, sqft: 3932, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 50},
+            {address: "16394 Cabernet Drive", price: 855000, sqft: 2460, beds: 3, baths: 3, yearBuilt: 2018, waterfront: "No", pool: "Yes", dom: 63},
+            {address: "16844 Strasbourg Lane", price: 1980000, sqft: 5529, beds: 5, baths: 8, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 68},
+            {address: "16903 Pavilion Way", price: 1300000, sqft: 3057, beds: 3, baths: 4, yearBuilt: 2017, waterfront: "No", pool: "Yes", dom: 13},
+            {address: "9765 Vitrail Lane", price: 1599000, sqft: 4248, beds: 4, baths: 5, yearBuilt: 2017, waterfront: "Yes", pool: "Yes", dom: 3},
+            {address: "9565 Eden Roc Court", price: 1200000, sqft: 3537, beds: 4, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 31},
+            {address: "16849 Pavilion Way", price: 2000000, sqft: 5188, beds: 5, baths: 7, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 147},
+            {address: "9307 Eden Roc Court", price: 1435000, sqft: 3537, beds: 4, baths: 5, yearBuilt: 2015, waterfront: "Yes", pool: "No", dom: 19},
+            {address: "16969 Pavilion Way", price: 1725000, sqft: 4248, beds: 5, baths: 6, yearBuilt: 2015, waterfront: "No", pool: "No", dom: 126},
+            {address: "9541 Eden Roc Court", price: 1550000, sqft: 4331, beds: 4, baths: 5, yearBuilt: 2016, waterfront: "Yes", pool: "Yes", dom: 147},
+            {address: "16928 Pierre Circle", price: 2400000, sqft: 3373, beds: 3, baths: 4, yearBuilt: 2015, waterfront: "Yes", pool: "Yes", dom: 102},
+            {address: "9368 Eden Roc Court", price: 1850000, sqft: 4783, beds: 5, baths: 7, yearBuilt: 2017, waterfront: "No", pool: "No", dom: 50}
+        ];
+
+        // Calculate comprehensive statistics
+        function calculateStats() {
+            const totalSales = salesData.length;
+            const totalVolume = salesData.reduce((sum, sale) => sum + sale.price, 0);
+            const avgPrice = totalVolume / totalSales;
+            const avgSqft = salesData.reduce((sum, sale) => sum + sale.sqft, 0) / totalSales;
+            const avgPriceSqft = salesData.reduce((sum, sale) => sum + (sale.price / sale.sqft), 0) / totalSales;
+            const prices = salesData.map(s => s.price).sort((a, b) => a - b);
+            const medianPrice = prices[Math.floor(totalSales / 2)];
+            const waterfrontCount = salesData.filter(s => s.waterfront === "Yes").length;
+            const poolCount = salesData.filter(s => s.pool === "Yes").length;
+            const avgDOM = salesData.reduce((sum, sale) => sum + sale.dom, 0) / totalSales;
+            const minPrice = Math.min(...prices);
+            const maxPrice = Math.max(...prices);
+
+            return {
+                totalSales,
+                totalVolume,
+                avgPrice,
+                avgSqft,
+                avgPriceSqft,
+                medianPrice,
+                waterfrontCount,
+                poolCount,
+                avgDOM,
+                minPrice,
+                maxPrice
+            };
+        }
+
+        // Group by year built and calculate yearly stats
+        function getYearlyStats() {
+            const years = {};
+            salesData.forEach(sale => {
+                const year = sale.yearBuilt;
+                if (!years[year]) {
+                    years[year] = { sales: [], count: 0, totalPrice: 0, totalSqft: 0 };
+                }
+                years[year].sales.push(sale);
+                years[year].count++;
+                years[year].totalPrice += sale.price;
+                years[year].totalSqft += sale.sqft;
+            });
+
+            const yearlyData = Object.keys(years).sort().map(year => ({
+                year,
+                count: years[year].count,
+                avgPrice: years[year].totalPrice / years[year].count,
+                avgPriceSqft: years[year].sales.reduce((sum, s) => sum + (s.price / s.sqft), 0) / years[year].count,
+                avgSqft: years[year].totalSqft / years[year].count,
+                totalVolume: years[year].totalPrice
+            }));
+
+            return yearlyData;
+        }
+
+        // Display summary stats
+        function displayStats() {
+            const stats = calculateStats();
+            const statsHTML = `
+                <div class="stat-card">
+                    <h3>Total Closed Sales</h3>
+                    <div class="value">${stats.totalSales}</div>
+                    <div class="subtext">Properties Sold</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Total Sales Volume</h3>
+                    <div class="value">$${(stats.totalVolume / 1000000).toFixed(1)}M</div>
+                    <div class="subtext">Combined Value</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Sale Price</h3>
+                    <div class="value">$${(stats.avgPrice / 1000).toFixed(0)}K</div>
+                    <div class="subtext">Mean: $${(stats.avgPrice / 1000000).toFixed(2)}M</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Median Sale Price</h3>
+                    <div class="value">$${(stats.medianPrice / 1000).toFixed(0)}K</div>
+                    <div class="subtext">50th Percentile</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Price Per SqFt</h3>
+                    <div class="value">$${stats.avgPriceSqft.toFixed(0)}</div>
+                    <div class="subtext">Overall Average</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Size</h3>
+                    <div class="value">${stats.avgSqft.toFixed(0)}</div>
+                    <div class="subtext">Square Feet</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Price Range</h3>
+                    <div class="value">$${(stats.minPrice / 1000).toFixed(0)}K - $${(stats.maxPrice / 1000000).toFixed(1)}M</div>
+                    <div class="subtext">Min to Max</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Waterfront Properties</h3>
+                    <div class="value">${((stats.waterfrontCount / stats.totalSales) * 100).toFixed(0)}%</div>
+                    <div class="subtext">${stats.waterfrontCount} of ${stats.totalSales}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Pool Properties</h3>
+                    <div class="value">${((stats.poolCount / stats.totalSales) * 100).toFixed(0)}%</div>
+                    <div class="subtext">${stats.poolCount} of ${stats.totalSales}</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Avg Days on Market</h3>
+                    <div class="value">${stats.avgDOM.toFixed(0)}</div>
+                    <div class="subtext">Days to Sell</div>
+                </div>
+            `;
+            document.getElementById('statsGrid').innerHTML = statsHTML;
+        }
+
+        // Display year breakdown table
+        function displayYearTable() {
+            const yearlyStats = getYearlyStats();
+            const tbody = document.getElementById('yearTableBody');
+            tbody.innerHTML = yearlyStats.map(year => `
+                <tr>
+                    <td><strong>${year.year}</strong></td>
+                    <td>${year.count}</td>
+                    <td class="price">$${year.avgPriceSqft.toFixed(0)}</td>
+                    <td>$${(year.avgPrice / 1000000).toFixed(2)}M</td>
+                    <td>${year.avgSqft.toFixed(0)} sqft</td>
+                    <td>$${(year.totalVolume / 1000000).toFixed(1)}M</td>
+                </tr>
+            `).join('');
+        }
+
+        // Create charts
+        function createCharts() {
+            const yearlyStats = getYearlyStats();
+            const years = yearlyStats.map(y => y.year);
+
+            // Price per SqFt Chart
+            new Chart(document.getElementById('priceSqftChart'), {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Average $/SqFt',
+                        data: yearlyStats.map(y => y.avgPriceSqft),
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => '$' + context.parsed.y.toFixed(0) + '/sqft'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: (value) => '$' + value.toFixed(0)
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Sales Volume Chart
+            new Chart(document.getElementById('salesVolumeChart'), {
+                type: 'bar',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Number of Sales',
+                        data: yearlyStats.map(y => y.count),
+                        backgroundColor: '#764ba2',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 10
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Avg Price Chart
+            new Chart(document.getElementById('avgPriceChart'), {
+                type: 'line',
+                data: {
+                    labels: years,
+                    datasets: [{
+                        label: 'Average Sale Price',
+                        data: yearlyStats.map(y => y.avgPrice),
+                        borderColor: '#28a745',
+                        backgroundColor: 'rgba(40, 167, 69, 0.1)',
+                        borderWidth: 3,
+                        tension: 0.4,
+                        fill: true,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: (context) => '$' + (context.parsed.y / 1000000).toFixed(2) + 'M'
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: false,
+                            ticks: {
+                                callback: (value) => '$' + (value / 1000000).toFixed(1) + 'M'
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Size Distribution Chart
+            const sizeRanges = {
+                'Under 3,000': salesData.filter(s => s.sqft < 3000).length,
+                '3,000-4,000': salesData.filter(s => s.sqft >= 3000 && s.sqft < 4000).length,
+                '4,000-5,000': salesData.filter(s => s.sqft >= 4000 && s.sqft < 5000).length,
+                '5,000-6,000': salesData.filter(s => s.sqft >= 5000 && s.sqft < 6000).length,
+                '6,000+': salesData.filter(s => s.sqft >= 6000).length
+            };
+
+            new Chart(document.getElementById('sizeDistChart'), {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(sizeRanges),
+                    datasets: [{
+                        data: Object.values(sizeRanges),
+                        backgroundColor: ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#00f2fe']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+
+            // Days on Market Chart
+            const domRanges = {
+                '0-30 days': salesData.filter(s => s.dom <= 30).length,
+                '31-60 days': salesData.filter(s => s.dom > 30 && s.dom <= 60).length,
+                '61-90 days': salesData.filter(s => s.dom > 60 && s.dom <= 90).length,
+                '91-120 days': salesData.filter(s => s.dom > 90 && s.dom <= 120).length,
+                '120+ days': salesData.filter(s => s.dom > 120).length
+            };
+
+            new Chart(document.getElementById('domChart'), {
+                type: 'bar',
+                data: {
+                    labels: Object.keys(domRanges),
+                    datasets: [{
+                        label: 'Number of Properties',
+                        data: Object.values(domRanges),
+                        backgroundColor: '#17a2b8',
+                        borderRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        // Populate table
+        function populateTable(data = salesData) {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = data.map(sale => `
+                <tr>
+                    <td>${sale.address}</td>
+                    <td class="price">$${sale.price.toLocaleString()}</td>
+                    <td>$${(sale.price / sale.sqft).toFixed(0)}</td>
+                    <td>${sale.sqft.toLocaleString()}</td>
+                    <td>${sale.beds}</td>
+                    <td>${sale.baths}</td>
+                    <td>${sale.yearBuilt}</td>
+                    <td>${sale.dom}</td>
+                    <td>
+                        ${sale.waterfront === 'Yes' ? '<span class="waterfront">Waterfront</span> ' : ''}
+                        ${sale.pool === 'Yes' ? '<span class="pool">Pool</span>' : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Setup filters
+        function setupFilters() {
+            // Populate year filter
+            const years = [...new Set(salesData.map(s => s.yearBuilt))].sort();
+            const yearFilter = document.getElementById('yearFilter');
+            years.forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                yearFilter.appendChild(option);
+            });
+
+            // Populate bedroom filter
+            const bedrooms = [...new Set(salesData.map(s => s.beds))].sort((a, b) => a - b);
+            const bedroomFilter = document.getElementById('bedroomFilter');
+            bedrooms.forEach(bed => {
+                const option = document.createElement('option');
+                option.value = bed;
+                option.textContent = bed + ' Beds';
+                bedroomFilter.appendChild(option);
+            });
+
+            // Add filter event listeners
+            const filters = ['yearFilter', 'bedroomFilter', 'waterfrontFilter', 'poolFilter', 'minPrice', 'maxPrice'];
+            filters.forEach(filterId => {
+                document.getElementById(filterId).addEventListener('change', applyFilters);
+            });
+        }
+
+        function applyFilters() {
+            let filtered = [...salesData];
+
+            const year = document.getElementById('yearFilter').value;
+            const bedrooms = document.getElementById('bedroomFilter').value;
+            const waterfront = document.getElementById('waterfrontFilter').value;
+            const pool = document.getElementById('poolFilter').value;
+            const minPrice = document.getElementById('minPrice').value;
+            const maxPrice = document.getElementById('maxPrice').value;
+
+            if (year !== 'all') filtered = filtered.filter(s => s.yearBuilt == year);
+            if (bedrooms !== 'all') filtered = filtered.filter(s => s.beds == bedrooms);
+            if (waterfront !== 'all') filtered = filtered.filter(s => s.waterfront.toLowerCase() === waterfront);
+            if (pool !== 'all') filtered = filtered.filter(s => s.pool.toLowerCase() === pool);
+            if (minPrice) filtered = filtered.filter(s => s.price >= parseInt(minPrice));
+            if (maxPrice) filtered = filtered.filter(s => s.price <= parseInt(maxPrice));
+
+            populateTable(filtered);
+        }
+
+        // Sort table
+        let sortDirection = {};
+        function sortTable(column) {
+            const tbody = document.getElementById('tableBody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            sortDirection[column] = !sortDirection[column];
+
+            rows.sort((a, b) => {
+                let aVal = a.cells[column].textContent;
+                let bVal = b.cells[column].textContent;
+
+                // Remove currency symbols and commas for numeric comparison
+                if ([1, 2, 3, 4, 5, 6, 7].includes(column)) {
+                    aVal = parseFloat(aVal.replace(/[$,]/g, ''));
+                    bVal = parseFloat(bVal.replace(/[$,]/g, ''));
+                }
+
+                if (sortDirection[column]) {
+                    return aVal > bVal ? 1 : -1;
+                } else {
+                    return aVal < bVal ? 1 : -1;
+                }
+            });
+
+            tbody.innerHTML = '';
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Initialize
+        displayStats();
+        displayYearTable();
+        createCharts();
+        populateTable();
+        setupFilters();
+    </script>
+</body>
+</html>
